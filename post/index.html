@@ -158,10 +158,12 @@
   <section class="entry-content">
     <p>条件随机场是一个序列模型，被广泛应用在NLP的标注任务上。
 目标 假设输入一个序列 $$ X = \left(x_1,x_2,\dots,x_n\right) $$ CRF模型需要预测序列中每个元素$x_i$对应的标签$y_i$，即输出一个序列 $$ \hat{Y} = \left(\hat{y}_1,\hat{y}_2,\dots,\hat{y}_n\right) $$
-假设  只有相邻的标签之间具有依赖关系（线性链、无向图）。 $y_i$依赖于X  训练 前向传播 特征工程 转移特征 构造$K_1$条关于$y_i$和$y_{i-1}$的特征，即 $$ t_k = t_k(y_{i-1},y_{i},x,i) = \left{\begin{array}\\
+假设  只有相邻的标签之间具有依赖关系（线性链、无向图）。 $y_i$依赖于X  训练 前向传播 特征工程 转移特征 构造$K_1$条关于$y_i$和$y_{i-1}$的特征，即
+$$ t_k = t_k(y_{i-1},y_{i},x,i) = \left{\begin{array}\\
 1, \text{condition_1} \\
 0, \text{condition_0} \end{array}\right. $$
-状态特征 构造$K_2$条关于$y_i$的特征，即 $$ s_k = s_k(y_{i},x,i) = \left{\begin{array}\\
+状态特征 构造$K_2$条关于$y_i$的特征，即
+$$ s_k = s_k(y_{i},x,i) = \left{\begin{array}\\
 1, \text{condition_1} \\
 0, \text{condition_0} \end{array}\right. $$
 计算概率 假设每个$y_i$都有两种可能的取值，即$y_i \in {1,2}$。当序列长度等于$3$时，所有可能的路径如下图所示
