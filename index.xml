@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>渊海</title>
+    <link>http://qiaosu.gitee.io/</link>
+    <description>Recent content on 渊海</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 06 Aug 2021 17:45:18 +0800</lastBuildDate><atom:link href="http://qiaosu.gitee.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Test</title>
+      <link>http://qiaosu.gitee.io/others/test/</link>
+      <pubDate>Fri, 06 Aug 2021 17:45:18 +0800</pubDate>
+      
+      <guid>http://qiaosu.gitee.io/others/test/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Second</title>
+      <link>http://qiaosu.gitee.io/post/second/</link>
+      <pubDate>Fri, 06 Aug 2021 17:15:27 +0800</pubDate>
+      
+      <guid>http://qiaosu.gitee.io/post/second/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>First</title>
+      <link>http://qiaosu.gitee.io/post/first/</link>
+      <pubDate>Fri, 06 Aug 2021 17:14:31 +0800</pubDate>
+      
+      <guid>http://qiaosu.gitee.io/post/first/</guid>
+      <description>主成分分析意在降维，因子分析意在分析数据内在结构。二者目的不同，但采取了很多相同的步骤，因此如果只用结论就非常容易混淆。为了明确二者差异，首先给出步骤以及推导。
+步骤 假设有$m$条样本数据，每条样本有$n$维特征，得到样本矩阵
+$$ X^* = \left( \begin{matrix} x^*_{11} &amp;amp; x^*_{12} &amp;amp; \dots &amp;amp; x^*_{1n} \\
+x^*_{21} &amp;amp; x^*_{22} &amp;amp; \dots &amp;amp; x^*_{2n} \\
+\vdots &amp;amp; \vdots &amp;amp; \vdots &amp;amp; \vdots \\
+x^*_{m1} &amp;amp; x^*_{m2} &amp;amp; \dots &amp;amp; x^*_{mn} \\
+\end{matrix} \right) = \left( \begin{matrix} x^*_{1} &amp;amp; x^*_{2} &amp;amp; \dots &amp;amp; x^*_{n} \\ \end{matrix} \right) $$ 为了方便计算协方差，首先对样本进行中心化处理（用协方差</description>
+    </item>
+    
+    <item>
+      <title>浅析主成分分析和因子分析</title>
+      <link>http://qiaosu.gitee.io/post/%E6%B5%85%E6%9E%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%E5%92%8C%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</link>
+      <pubDate>Fri, 06 Aug 2021 14:31:25 +0800</pubDate>
+      
+      <guid>http://qiaosu.gitee.io/post/%E6%B5%85%E6%9E%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%E5%92%8C%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</guid>
+      <description>主成分分析意在降维，因子分析意在分析数据内在结构。二者目的不同，但采取了很多相同的步骤，因此如果只用结论就非常容易混淆。为了明确二者差异，首先给出步骤以及推导。
+步骤 假设有$m$条样本数据，每条样本有$n$维特征，得到样本矩阵
+$$ X^* = \left( \begin{matrix} x^*_{11} &amp;amp; x^*_{12} &amp;amp; \dots &amp;amp; x^*_{1n} \\
+x^*_{21} &amp;amp; x^*_{22} &amp;amp; \dots &amp;amp; x^*_{2n} \\
+\vdots &amp;amp; \vdots &amp;amp; \vdots &amp;amp; \vdots \\
+x^*_{m1} &amp;amp; x^*_{m2} &amp;amp; \dots &amp;amp; x^*_{mn} \\
+\end{matrix} \right) = \left( \begin{matrix} x^*_{1} &amp;amp; x^*_{2} &amp;amp; \dots &amp;amp; x^*_{n} \\ \end{matrix} \right) $$ 为了方便计算协方差，首先对样本进行中心化处理（用协方差做主成分分析也可以不中心化，证明差不多），得到$X$，有$E(x_i) = 0$。
+计算$C = \frac{1}{m}X^TX$，则$C$是$X$的协方差矩阵，证明如下：
+$$ x_1^Tx_1 = \sum_{i=1}^{m}x^2_{i1} = m\left(E(x_1^2) - E^2(x_1)\right)=mCov(x_1,x_1) $$</description>
+    </item>
+    
+    
+    
+  </channel>
+</rss>
