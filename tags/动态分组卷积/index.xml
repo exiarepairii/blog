@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>动态分组卷积 on 渊海</title>
+    <link>http://qiaosu.gitee.io/tags/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF/</link>
+    <description>Recent content in 动态分组卷积 on 渊海</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 06 Aug 2021 19:11:58 +0800</lastBuildDate><atom:link href="http://qiaosu.gitee.io/tags/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>动态分组卷积论文笔记</title>
+      <link>http://qiaosu.gitee.io/post/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Fri, 06 Aug 2021 19:11:58 +0800</pubDate>
+      
+      <guid>http://qiaosu.gitee.io/post/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</guid>
+      <description>蓝色和绿色两个分支代表两个头，同样的输入同时进入两个头。每个头的操作都一样，但是拥有独立的权重。下文以其中一个头的操作为例。
+  对输入按通道求均值，获得通道数维度的向量（Subsample）。
+  输入进入一个两层的MLP（ReLu激活），得到维度不变的稀疏向量（Saliency Generator），可以视为各通道的重要性得分或权重。
+  该稀疏向量的均值即为图中的L1 loss，原文希望通过对L1 loss的优化得到稀疏解。
+  按照提前设置的比例将重要性得分最低的几个通道的权重设为0（Gate）。
+  对每个通道乘以权重，此时有的通道数值被扩大，有的通道数值被缩小，有的通道数值被变为0。然后做普通卷积，得到该头的输出。
+  把各头的输出按照通道拼接，得到动态分组卷积的输出。
+  维度推导  输入$(N,C,H,W)$ 分$h$个头，就创建$h$个Saliency Generator  Saliency Generator  原论文直言这部分参考了SENet的思想，遵循SEBlock的设计规范。
+  按通道求均值得到$AVG_X = (N,C)$
+  全连接+ReLu，$ReLu((N,C)\times(C,\frac{C}{d})) = ReLu((N,\frac{C}{d}))$，$d$为squeeze rate，是超参数，原文设为16。
+  全连接+ReLu，$Mask = ReLu((N,\frac{C}{d})\times (\frac{C}{d},C)) = ReLu((N,C))$
+  Gating Strategy 若$\text{inactive_channels}=0$​​，$Mask$​​即为各通道的权重。若$\text{inactive_channels}&amp;gt;0$​​，则把权重最低的inactive_channels个通道的权重设为$0$​​。
+ 对每个头，对输入$(N,C,H,W)$，按维度$C$乘以权重$Mask$，获得新的feature_map。 把所有头得到的feature_map按通道拼接，获得$(N,h*C,H,W)$并按通道打乱（为什么打乱？）。 分$h$组卷积，输出$(N,C_{\text{out}},H,W)$  参数量计算 普通卷积 $$ C_{\text{in}}C_{\text{out}}HW $$</description>
+    </item>
+    
+  </channel>
+</rss>

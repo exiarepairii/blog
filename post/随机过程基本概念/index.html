@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>随机过程基本概念 | 渊海</title>
+<meta name="keywords" content="随机过程" />
+<meta name="description" content="随机过程基本概念 最近主要学习了随机过程，故对书中一些概念进行整理，并附上自己的理解。一方面方便日后查阅，另一方面有助于在整理过程中查漏补缺。
+测度空间 首先对$\sigma$代数的定义进行归纳。对于集合族F（集合组成的集合），其元素都是非空集合$\Omega$的子集，若
+ $\Omega \in F$（任何集合都是自身的子集）； 集合$A \in F$，且补集$A^c \in F$； 对于可数个$A_n \in F$，其并集也属于F。  则$F$为$\Omega$上的一个**$\sigma$代数**，**$(\Omega,F)$称为可测空间**。
+易知$F$中最大的元素就是$\Omega$，联系概率的定义（$P(\cdot)$是一个定义在$F$上的实值函数，且$P(\Omega)=1,\forall A\in F\text{有}0\le P(A)\le1$），可以发现概率的定义与$\sigma$代数的定义一一对应，故$(\Omega,F,P)$称为概率空间。
+随机过程 在概率空间上的一个随机变量集合${X(t),t\in T}$就是随机过程，$T$被称为指标集或参数集。 若按照_性质 _进行划分，有两种随机过程非常重要，一个是平稳过程，另一个是独立增量过程。本文首先讨论平稳过程的定义和性质。
+NOTE: 此处对随机过程的分类并不是绝对的，一个具体的过程可以同时属于上述多种类型。以上思维导图只是为了帮助梳理本文结构。
+平稳过程 平稳过程又分为严平稳和宽平稳。严平稳要求随机变量的有限维分布不随时间变化 ；宽平稳要求随机过程的所有二阶矩存在 ，一阶矩不随时间变化且协方差函数只与时间间隔有关。
+一开始我顾名思义认为，严平稳要比宽平稳的要求更加严格，因此宽平稳应该包含严平稳。但查阅资料后发现，严平稳过程不一定存在二阶矩，因此不一定是宽平稳过程；而宽平稳过程的有限维分布也不一定不随时间变化，因此宽平稳过程也不一定满足严平稳的性质，具体的反例可见参考文献1。
+仔细分析严平稳和宽平稳的定义，可以发现如果一个严平稳的二阶矩存在，由于其分布不随时间变化，那么该严平稳过程的一阶矩必然不随时间变化，其协方差函数也与时间无关，满足宽平稳的所有要求。因此可以得出结论，存在二阶矩的严平稳过程必然是宽平稳的。
+对于平稳性而言，正态过程（有限维分布是多为正态分布）是一种很重要的特例。由于正态过程的有限维联合分布由均值函数和协方差函数唯一确定，若满足宽平稳条件（一阶矩不随时间变化、协方差函数只与时间间隔有关）则必然满足严平稳条件。故宽平稳的**正态过程 **必然是严平稳的，所以在证明严平稳时，也可以从该性质入手。
+遍历性 接下来讨论平稳过程的性质——遍历性。首先给出均值遍历性的定义。
+对于平稳过程（或平稳序列）$X$，均值为$\mu$。若满足
+$$ \lim_{T \to \infty}\frac{1}{2T}\int_{-T}^TX(t)dt=\mu $$
+或
+$$ \lim_{T \to \infty}\frac{1}{2N&#43;1}\sum_{k=-N}^NX(k)=\mu $$
+则称$X$的均值具有遍历性。那么该如何理解均值的遍历性呢？
+注意均值函数的定义$\mu_X(t) = E[X(t)]$，这是一个关于时间变化的函数。若要对某时刻的函数取值进行估计，通常我们要做的就是对处于时刻的随机过程进行大量观测，获得一系列类似${X_1(t),X_2(t),\dots,X_n(t)}$的观测值，然后求他们的算术平均数。
+但是在现实中，这样同一时刻的大量的观测是很难得到的。例如将是否下雨记为随机变量，其关于时间的变化就是一个随机过程，但无论如何，某年某日是否下雨这个事件只会发生一次，我们永远也不可能得到一系列关于该日是否下雨的数据。那要如何估计下雨的概率呢？多观测几日后对数据取平均值不就好了！（此处不考虑季节等时间因素对降雨的影响），其实这在无意中就已经使用了均值的遍历性。
+对于协方差也有类似的遍历性定义，在此不再赘述。如果一个随机过程的均值和协方差函数都具有遍历性，则称此过程具有遍历性。
+独立增量过程 常识告诉我们，事物当前的状况和它过去的状况之间，往往有着千丝万缕的联系。同样的，大多数随机过程通常不满足独立性，但好在许多过程的增量是相互独立的，这为我们研究提供了极大便利。我们称满足这种条件的随机过程为独立增量过程。即对${X(t),t \in T}$，增量$\Delta_i = X(t_{i&#43;1})-X(t_i)$相互独立。
+平稳独立增量过程 类似前文叙述的平稳过程定义，如果过程的增量的分布与时间无关，则称为平稳增量过程。同时具有独立增量和平稳增量的过程称为平稳独立增量过程。
+和证明严平稳一样，要证明增量平稳并不容易。好在可以通过特征函数入手，若${X(t),t \ge 0}$是一个独立增量过程，其具有平稳增量的充分必要条件是：其特征函数具有可乘性，即
+$$ \Psi_{X(t&#43;s)}(a)=\Psi_{X(t)}(a)\Psi_{X(s)}(a) $$">
+<meta name="author" content="">
+<link rel="canonical" href="http://qiaosu.gitee.io/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" />
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.6cba0d81b5f3f42bb578d49f402ba4175aa72b43def148780b8ad714c957c6f5.css" integrity="sha256-bLoNgbXz9Cu1eNSfQCukF1qnK0Pe8Uh4C4rXFMlXxvU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js" integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5&#43;kdJvBz5iKbt6B5PJI="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://qiaosu.gitee.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://qiaosu.gitee.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://qiaosu.gitee.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://qiaosu.gitee.io/apple-touch-icon.png">
+<link rel="mask-icon" href="http://qiaosu.gitee.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.87.0" />
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [["$", "$"]],
+    },
+    displayMath: [
+      ["$$", "$$"],
+      ["\[\[", "\]\]"],
+    ],
+    svg: {
+      fontCache: "global",
+    },
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+></script>
+<meta property="og:title" content="随机过程基本概念" />
+<meta property="og:description" content="随机过程基本概念 最近主要学习了随机过程，故对书中一些概念进行整理，并附上自己的理解。一方面方便日后查阅，另一方面有助于在整理过程中查漏补缺。
+测度空间 首先对$\sigma$代数的定义进行归纳。对于集合族F（集合组成的集合），其元素都是非空集合$\Omega$的子集，若
+ $\Omega \in F$（任何集合都是自身的子集）； 集合$A \in F$，且补集$A^c \in F$； 对于可数个$A_n \in F$，其并集也属于F。  则$F$为$\Omega$上的一个**$\sigma$代数**，**$(\Omega,F)$称为可测空间**。
+易知$F$中最大的元素就是$\Omega$，联系概率的定义（$P(\cdot)$是一个定义在$F$上的实值函数，且$P(\Omega)=1,\forall A\in F\text{有}0\le P(A)\le1$），可以发现概率的定义与$\sigma$代数的定义一一对应，故$(\Omega,F,P)$称为概率空间。
+随机过程 在概率空间上的一个随机变量集合${X(t),t\in T}$就是随机过程，$T$被称为指标集或参数集。 若按照_性质 _进行划分，有两种随机过程非常重要，一个是平稳过程，另一个是独立增量过程。本文首先讨论平稳过程的定义和性质。
+NOTE: 此处对随机过程的分类并不是绝对的，一个具体的过程可以同时属于上述多种类型。以上思维导图只是为了帮助梳理本文结构。
+平稳过程 平稳过程又分为严平稳和宽平稳。严平稳要求随机变量的有限维分布不随时间变化 ；宽平稳要求随机过程的所有二阶矩存在 ，一阶矩不随时间变化且协方差函数只与时间间隔有关。
+一开始我顾名思义认为，严平稳要比宽平稳的要求更加严格，因此宽平稳应该包含严平稳。但查阅资料后发现，严平稳过程不一定存在二阶矩，因此不一定是宽平稳过程；而宽平稳过程的有限维分布也不一定不随时间变化，因此宽平稳过程也不一定满足严平稳的性质，具体的反例可见参考文献1。
+仔细分析严平稳和宽平稳的定义，可以发现如果一个严平稳的二阶矩存在，由于其分布不随时间变化，那么该严平稳过程的一阶矩必然不随时间变化，其协方差函数也与时间无关，满足宽平稳的所有要求。因此可以得出结论，存在二阶矩的严平稳过程必然是宽平稳的。
+对于平稳性而言，正态过程（有限维分布是多为正态分布）是一种很重要的特例。由于正态过程的有限维联合分布由均值函数和协方差函数唯一确定，若满足宽平稳条件（一阶矩不随时间变化、协方差函数只与时间间隔有关）则必然满足严平稳条件。故宽平稳的**正态过程 **必然是严平稳的，所以在证明严平稳时，也可以从该性质入手。
+遍历性 接下来讨论平稳过程的性质——遍历性。首先给出均值遍历性的定义。
+对于平稳过程（或平稳序列）$X$，均值为$\mu$。若满足
+$$ \lim_{T \to \infty}\frac{1}{2T}\int_{-T}^TX(t)dt=\mu $$
+或
+$$ \lim_{T \to \infty}\frac{1}{2N&#43;1}\sum_{k=-N}^NX(k)=\mu $$
+则称$X$的均值具有遍历性。那么该如何理解均值的遍历性呢？
+注意均值函数的定义$\mu_X(t) = E[X(t)]$，这是一个关于时间变化的函数。若要对某时刻的函数取值进行估计，通常我们要做的就是对处于时刻的随机过程进行大量观测，获得一系列类似${X_1(t),X_2(t),\dots,X_n(t)}$的观测值，然后求他们的算术平均数。
+但是在现实中，这样同一时刻的大量的观测是很难得到的。例如将是否下雨记为随机变量，其关于时间的变化就是一个随机过程，但无论如何，某年某日是否下雨这个事件只会发生一次，我们永远也不可能得到一系列关于该日是否下雨的数据。那要如何估计下雨的概率呢？多观测几日后对数据取平均值不就好了！（此处不考虑季节等时间因素对降雨的影响），其实这在无意中就已经使用了均值的遍历性。
+对于协方差也有类似的遍历性定义，在此不再赘述。如果一个随机过程的均值和协方差函数都具有遍历性，则称此过程具有遍历性。
+独立增量过程 常识告诉我们，事物当前的状况和它过去的状况之间，往往有着千丝万缕的联系。同样的，大多数随机过程通常不满足独立性，但好在许多过程的增量是相互独立的，这为我们研究提供了极大便利。我们称满足这种条件的随机过程为独立增量过程。即对${X(t),t \in T}$，增量$\Delta_i = X(t_{i&#43;1})-X(t_i)$相互独立。
+平稳独立增量过程 类似前文叙述的平稳过程定义，如果过程的增量的分布与时间无关，则称为平稳增量过程。同时具有独立增量和平稳增量的过程称为平稳独立增量过程。
+和证明严平稳一样，要证明增量平稳并不容易。好在可以通过特征函数入手，若${X(t),t \ge 0}$是一个独立增量过程，其具有平稳增量的充分必要条件是：其特征函数具有可乘性，即
+$$ \Psi_{X(t&#43;s)}(a)=\Psi_{X(t)}(a)\Psi_{X(s)}(a) $$" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://qiaosu.gitee.io/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-08-06T19:13:50&#43;08:00" />
+<meta property="article:modified_time" content="2021-08-06T19:13:50&#43;08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="随机过程基本概念"/>
+<meta name="twitter:description" content="随机过程基本概念 最近主要学习了随机过程，故对书中一些概念进行整理，并附上自己的理解。一方面方便日后查阅，另一方面有助于在整理过程中查漏补缺。
+测度空间 首先对$\sigma$代数的定义进行归纳。对于集合族F（集合组成的集合），其元素都是非空集合$\Omega$的子集，若
+ $\Omega \in F$（任何集合都是自身的子集）； 集合$A \in F$，且补集$A^c \in F$； 对于可数个$A_n \in F$，其并集也属于F。  则$F$为$\Omega$上的一个**$\sigma$代数**，**$(\Omega,F)$称为可测空间**。
+易知$F$中最大的元素就是$\Omega$，联系概率的定义（$P(\cdot)$是一个定义在$F$上的实值函数，且$P(\Omega)=1,\forall A\in F\text{有}0\le P(A)\le1$），可以发现概率的定义与$\sigma$代数的定义一一对应，故$(\Omega,F,P)$称为概率空间。
+随机过程 在概率空间上的一个随机变量集合${X(t),t\in T}$就是随机过程，$T$被称为指标集或参数集。 若按照_性质 _进行划分，有两种随机过程非常重要，一个是平稳过程，另一个是独立增量过程。本文首先讨论平稳过程的定义和性质。
+NOTE: 此处对随机过程的分类并不是绝对的，一个具体的过程可以同时属于上述多种类型。以上思维导图只是为了帮助梳理本文结构。
+平稳过程 平稳过程又分为严平稳和宽平稳。严平稳要求随机变量的有限维分布不随时间变化 ；宽平稳要求随机过程的所有二阶矩存在 ，一阶矩不随时间变化且协方差函数只与时间间隔有关。
+一开始我顾名思义认为，严平稳要比宽平稳的要求更加严格，因此宽平稳应该包含严平稳。但查阅资料后发现，严平稳过程不一定存在二阶矩，因此不一定是宽平稳过程；而宽平稳过程的有限维分布也不一定不随时间变化，因此宽平稳过程也不一定满足严平稳的性质，具体的反例可见参考文献1。
+仔细分析严平稳和宽平稳的定义，可以发现如果一个严平稳的二阶矩存在，由于其分布不随时间变化，那么该严平稳过程的一阶矩必然不随时间变化，其协方差函数也与时间无关，满足宽平稳的所有要求。因此可以得出结论，存在二阶矩的严平稳过程必然是宽平稳的。
+对于平稳性而言，正态过程（有限维分布是多为正态分布）是一种很重要的特例。由于正态过程的有限维联合分布由均值函数和协方差函数唯一确定，若满足宽平稳条件（一阶矩不随时间变化、协方差函数只与时间间隔有关）则必然满足严平稳条件。故宽平稳的**正态过程 **必然是严平稳的，所以在证明严平稳时，也可以从该性质入手。
+遍历性 接下来讨论平稳过程的性质——遍历性。首先给出均值遍历性的定义。
+对于平稳过程（或平稳序列）$X$，均值为$\mu$。若满足
+$$ \lim_{T \to \infty}\frac{1}{2T}\int_{-T}^TX(t)dt=\mu $$
+或
+$$ \lim_{T \to \infty}\frac{1}{2N&#43;1}\sum_{k=-N}^NX(k)=\mu $$
+则称$X$的均值具有遍历性。那么该如何理解均值的遍历性呢？
+注意均值函数的定义$\mu_X(t) = E[X(t)]$，这是一个关于时间变化的函数。若要对某时刻的函数取值进行估计，通常我们要做的就是对处于时刻的随机过程进行大量观测，获得一系列类似${X_1(t),X_2(t),\dots,X_n(t)}$的观测值，然后求他们的算术平均数。
+但是在现实中，这样同一时刻的大量的观测是很难得到的。例如将是否下雨记为随机变量，其关于时间的变化就是一个随机过程，但无论如何，某年某日是否下雨这个事件只会发生一次，我们永远也不可能得到一系列关于该日是否下雨的数据。那要如何估计下雨的概率呢？多观测几日后对数据取平均值不就好了！（此处不考虑季节等时间因素对降雨的影响），其实这在无意中就已经使用了均值的遍历性。
+对于协方差也有类似的遍历性定义，在此不再赘述。如果一个随机过程的均值和协方差函数都具有遍历性，则称此过程具有遍历性。
+独立增量过程 常识告诉我们，事物当前的状况和它过去的状况之间，往往有着千丝万缕的联系。同样的，大多数随机过程通常不满足独立性，但好在许多过程的增量是相互独立的，这为我们研究提供了极大便利。我们称满足这种条件的随机过程为独立增量过程。即对${X(t),t \in T}$，增量$\Delta_i = X(t_{i&#43;1})-X(t_i)$相互独立。
+平稳独立增量过程 类似前文叙述的平稳过程定义，如果过程的增量的分布与时间无关，则称为平稳增量过程。同时具有独立增量和平稳增量的过程称为平稳独立增量过程。
+和证明严平稳一样，要证明增量平稳并不容易。好在可以通过特征函数入手，若${X(t),t \ge 0}$是一个独立增量过程，其具有平稳增量的充分必要条件是：其特征函数具有可乘性，即
+$$ \Psi_{X(t&#43;s)}(a)=\Psi_{X(t)}(a)\Psi_{X(s)}(a) $$"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://qiaosu.gitee.io/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "随机过程基本概念",
+      "item": "http://qiaosu.gitee.io/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "随机过程基本概念",
+  "name": "随机过程基本概念",
+  "description": "随机过程基本概念 最近主要学习了随机过程，故对书中一些概念进行整理，并附上自己的理解。一方面方便日后查阅，另一方面有助于在整理过程中查漏补缺。\n测度空间 首先对$\\sigma$代数的定义进行归纳。对于集合族F（集合组成的集合），其元素都是非空集合$\\Omega$的子集，若\n $\\Omega \\in F$（任何集合都是自身的子集）； 集合$A \\in F$，且补集$A^c \\in F$； 对于可数个$A_n \\in F$，其并集也属于F。  则$F$为$\\Omega$上的一个**$\\sigma$代数**，**$(\\Omega,F)$称为可测空间**。\n易知$F$中最大的元素就是$\\Omega$，联系概率的定义（$P(\\cdot)$是一个定义在$F$上的实值函数，且$P(\\Omega)=1,\\forall A\\in F\\text{有}0\\le P(A)\\le1$），可以发现概率的定义与$\\sigma$代数的定义一一对应，故$(\\Omega,F,P)$称为概率空间。\n随机过程 在概率空间上的一个随机变量集合${X(t),t\\in T}$就是随机过程，$T$被称为指标集或参数集。 若按照_性质 _进行划分，有两种随机过程非常重要，一个是平稳过程，另一个是独立增量过程。本文首先讨论平稳过程的定义和性质。\nNOTE: 此处对随机过程的分类并不是绝对的，一个具体的过程可以同时属于上述多种类型。以上思维导图只是为了帮助梳理本文结构。\n平稳过程 平稳过程又分为严平稳和宽平稳。严平稳要求随机变量的有限维分布不随时间变化 ；宽平稳要求随机过程的所有二阶矩存在 ，一阶矩不随时间变化且协方差函数只与时间间隔有关。\n一开始我顾名思义认为，严平稳要比宽平稳的要求更加严格，因此宽平稳应该包含严平稳。但查阅资料后发现，严平稳过程不一定存在二阶矩，因此不一定是宽平稳过程；而宽平稳过程的有限维分布也不一定不随时间变化，因此宽平稳过程也不一定满足严平稳的性质，具体的反例可见参考文献1。\n仔细分析严平稳和宽平稳的定义，可以发现如果一个严平稳的二阶矩存在，由于其分布不随时间变化，那么该严平稳过程的一阶矩必然不随时间变化，其协方差函数也与时间无关，满足宽平稳的所有要求。因此可以得出结论，存在二阶矩的严平稳过程必然是宽平稳的。\n对于平稳性而言，正态过程（有限维分布是多为正态分布）是一种很重要的特例。由于正态过程的有限维联合分布由均值函数和协方差函数唯一确定，若满足宽平稳条件（一阶矩不随时间变化、协方差函数只与时间间隔有关）则必然满足严平稳条件。故宽平稳的**正态过程 **必然是严平稳的，所以在证明严平稳时，也可以从该性质入手。\n遍历性 接下来讨论平稳过程的性质——遍历性。首先给出均值遍历性的定义。\n对于平稳过程（或平稳序列）$X$，均值为$\\mu$。若满足\n$$ \\lim_{T \\to \\infty}\\frac{1}{2T}\\int_{-T}^TX(t)dt=\\mu $$\n或\n$$ \\lim_{T \\to \\infty}\\frac{1}{2N+1}\\sum_{k=-N}^NX(k)=\\mu $$\n则称$X$的均值具有遍历性。那么该如何理解均值的遍历性呢？\n注意均值函数的定义$\\mu_X(t) = E[X(t)]$，这是一个关于时间变化的函数。若要对某时刻的函数取值进行估计，通常我们要做的就是对处于时刻的随机过程进行大量观测，获得一系列类似${X_1(t),X_2(t),\\dots,X_n(t)}$的观测值，然后求他们的算术平均数。\n但是在现实中，这样同一时刻的大量的观测是很难得到的。例如将是否下雨记为随机变量，其关于时间的变化就是一个随机过程，但无论如何，某年某日是否下雨这个事件只会发生一次，我们永远也不可能得到一系列关于该日是否下雨的数据。那要如何估计下雨的概率呢？多观测几日后对数据取平均值不就好了！（此处不考虑季节等时间因素对降雨的影响），其实这在无意中就已经使用了均值的遍历性。\n对于协方差也有类似的遍历性定义，在此不再赘述。如果一个随机过程的均值和协方差函数都具有遍历性，则称此过程具有遍历性。\n独立增量过程 常识告诉我们，事物当前的状况和它过去的状况之间，往往有着千丝万缕的联系。同样的，大多数随机过程通常不满足独立性，但好在许多过程的增量是相互独立的，这为我们研究提供了极大便利。我们称满足这种条件的随机过程为独立增量过程。即对${X(t),t \\in T}$，增量$\\Delta_i = X(t_{i+1})-X(t_i)$相互独立。\n平稳独立增量过程 类似前文叙述的平稳过程定义，如果过程的增量的分布与时间无关，则称为平稳增量过程。同时具有独立增量和平稳增量的过程称为平稳独立增量过程。\n和证明严平稳一样，要证明增量平稳并不容易。好在可以通过特征函数入手，若${X(t),t \\ge 0}$是一个独立增量过程，其具有平稳增量的充分必要条件是：其特征函数具有可乘性，即\n$$ \\Psi_{X(t+s)}(a)=\\Psi_{X(t)}(a)\\Psi_{X(s)}(a) $$",
+  "keywords": [
+    "随机过程"
+  ],
+  "articleBody": "随机过程基本概念 最近主要学习了随机过程，故对书中一些概念进行整理，并附上自己的理解。一方面方便日后查阅，另一方面有助于在整理过程中查漏补缺。\n测度空间 首先对$\\sigma$代数的定义进行归纳。对于集合族F（集合组成的集合），其元素都是非空集合$\\Omega$的子集，若\n $\\Omega \\in F$（任何集合都是自身的子集）； 集合$A \\in F$，且补集$A^c \\in F$； 对于可数个$A_n \\in F$，其并集也属于F。  则$F$为$\\Omega$上的一个**$\\sigma$代数**，**$(\\Omega,F)$称为可测空间**。\n易知$F$中最大的元素就是$\\Omega$，联系概率的定义（$P(\\cdot)$是一个定义在$F$上的实值函数，且$P(\\Omega)=1,\\forall A\\in F\\text{有}0\\le P(A)\\le1$），可以发现概率的定义与$\\sigma$代数的定义一一对应，故$(\\Omega,F,P)$称为概率空间。\n随机过程 在概率空间上的一个随机变量集合${X(t),t\\in T}$就是随机过程，$T$被称为指标集或参数集。 若按照_性质 _进行划分，有两种随机过程非常重要，一个是平稳过程，另一个是独立增量过程。本文首先讨论平稳过程的定义和性质。\nNOTE: 此处对随机过程的分类并不是绝对的，一个具体的过程可以同时属于上述多种类型。以上思维导图只是为了帮助梳理本文结构。\n平稳过程 平稳过程又分为严平稳和宽平稳。严平稳要求随机变量的有限维分布不随时间变化 ；宽平稳要求随机过程的所有二阶矩存在 ，一阶矩不随时间变化且协方差函数只与时间间隔有关。\n一开始我顾名思义认为，严平稳要比宽平稳的要求更加严格，因此宽平稳应该包含严平稳。但查阅资料后发现，严平稳过程不一定存在二阶矩，因此不一定是宽平稳过程；而宽平稳过程的有限维分布也不一定不随时间变化，因此宽平稳过程也不一定满足严平稳的性质，具体的反例可见参考文献1。\n仔细分析严平稳和宽平稳的定义，可以发现如果一个严平稳的二阶矩存在，由于其分布不随时间变化，那么该严平稳过程的一阶矩必然不随时间变化，其协方差函数也与时间无关，满足宽平稳的所有要求。因此可以得出结论，存在二阶矩的严平稳过程必然是宽平稳的。\n对于平稳性而言，正态过程（有限维分布是多为正态分布）是一种很重要的特例。由于正态过程的有限维联合分布由均值函数和协方差函数唯一确定，若满足宽平稳条件（一阶矩不随时间变化、协方差函数只与时间间隔有关）则必然满足严平稳条件。故宽平稳的**正态过程 **必然是严平稳的，所以在证明严平稳时，也可以从该性质入手。\n遍历性 接下来讨论平稳过程的性质——遍历性。首先给出均值遍历性的定义。\n对于平稳过程（或平稳序列）$X$，均值为$\\mu$。若满足\n$$ \\lim_{T \\to \\infty}\\frac{1}{2T}\\int_{-T}^TX(t)dt=\\mu $$\n或\n$$ \\lim_{T \\to \\infty}\\frac{1}{2N+1}\\sum_{k=-N}^NX(k)=\\mu $$\n则称$X$的均值具有遍历性。那么该如何理解均值的遍历性呢？\n注意均值函数的定义$\\mu_X(t) = E[X(t)]$，这是一个关于时间变化的函数。若要对某时刻的函数取值进行估计，通常我们要做的就是对处于时刻的随机过程进行大量观测，获得一系列类似${X_1(t),X_2(t),\\dots,X_n(t)}$的观测值，然后求他们的算术平均数。\n但是在现实中，这样同一时刻的大量的观测是很难得到的。例如将是否下雨记为随机变量，其关于时间的变化就是一个随机过程，但无论如何，某年某日是否下雨这个事件只会发生一次，我们永远也不可能得到一系列关于该日是否下雨的数据。那要如何估计下雨的概率呢？多观测几日后对数据取平均值不就好了！（此处不考虑季节等时间因素对降雨的影响），其实这在无意中就已经使用了均值的遍历性。\n对于协方差也有类似的遍历性定义，在此不再赘述。如果一个随机过程的均值和协方差函数都具有遍历性，则称此过程具有遍历性。\n独立增量过程 常识告诉我们，事物当前的状况和它过去的状况之间，往往有着千丝万缕的联系。同样的，大多数随机过程通常不满足独立性，但好在许多过程的增量是相互独立的，这为我们研究提供了极大便利。我们称满足这种条件的随机过程为独立增量过程。即对${X(t),t \\in T}$，增量$\\Delta_i = X(t_{i+1})-X(t_i)$相互独立。\n平稳独立增量过程 类似前文叙述的平稳过程定义，如果过程的增量的分布与时间无关，则称为平稳增量过程。同时具有独立增量和平稳增量的过程称为平稳独立增量过程。\n和证明严平稳一样，要证明增量平稳并不容易。好在可以通过特征函数入手，若${X(t),t \\ge 0}$是一个独立增量过程，其具有平稳增量的充分必要条件是：其特征函数具有可乘性，即\n$$ \\Psi_{X(t+s)}(a)=\\Psi_{X(t)}(a)\\Psi_{X(s)}(a) $$\n该定理可以通过特征函数的定义证明，此处略。\n参考文献  严平稳和宽平稳 平稳过程基本概念及例题 有限维分布的相容性  ",
+  "wordCount" : "74",
+  "inLanguage": "en",
+  "datePublished": "2021-08-06T19:13:50+08:00",
+  "dateModified": "2021-08-06T19:13:50+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://qiaosu.gitee.io/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "渊海",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://qiaosu.gitee.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: #1d1e20;
+                --entry: #2e2e33;
+                --primary: rgba(255, 255, 255, 0.84);
+                --secondary: rgba(255, 255, 255, 0.56);
+                --tertiary: rgba(255, 255, 255, 0.16);
+                --content: rgba(255, 255, 255, 0.74);
+                --hljs-bg: #2e2e33;
+                --code-bg: #37383e;
+                --border: #333;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://qiaosu.gitee.io/" accesskey="h" title="渊海 (Alt + H)">渊海</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://qiaosu.gitee.io/archives" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://qiaosu.gitee.io/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://qiaosu.gitee.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://qiaosu.gitee.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      随机过程基本概念
+    </h1>
+    <div class="post-meta">August 6, 2021
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <div class="details">Table of Contents</div>
+        </summary>
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e9%9a%8f%e6%9c%ba%e8%bf%87%e7%a8%8b%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5" aria-label="随机过程基本概念">随机过程基本概念</a><ul>
+                        
+                <li>
+                    <a href="#%e6%b5%8b%e5%ba%a6%e7%a9%ba%e9%97%b4" aria-label="测度空间">测度空间</a></li>
+                <li>
+                    <a href="#%e9%9a%8f%e6%9c%ba%e8%bf%87%e7%a8%8b" aria-label="随机过程">随机过程</a><ul>
+                        
+                <li>
+                    <a href="#%e5%b9%b3%e7%a8%b3%e8%bf%87%e7%a8%8b" aria-label="平稳过程">平稳过程</a><ul>
+                        
+                <li>
+                    <a href="#%e9%81%8d%e5%8e%86%e6%80%a7" aria-label="遍历性">遍历性</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e7%8b%ac%e7%ab%8b%e5%a2%9e%e9%87%8f%e8%bf%87%e7%a8%8b" aria-label="独立增量过程">独立增量过程</a></li>
+                <li>
+                    <a href="#%e5%b9%b3%e7%a8%b3%e7%8b%ac%e7%ab%8b%e5%a2%9e%e9%87%8f%e8%bf%87%e7%a8%8b" aria-label="平稳独立增量过程">平稳独立增量过程</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae" aria-label="参考文献">参考文献</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="随机过程基本概念">随机过程基本概念<a hidden class="anchor" aria-hidden="true" href="#随机过程基本概念">#</a></h1>
+<p>最近主要学习了随机过程，故对书中一些概念进行整理，并附上自己的理解。一方面方便日后查阅，另一方面有助于在整理过程中查漏补缺。</p>
+<h2 id="测度空间">测度空间<a hidden class="anchor" aria-hidden="true" href="#测度空间">#</a></h2>
+<p>首先对$\sigma$代数的定义进行归纳。<strong>对于集合族F</strong>（集合组成的集合），其元素都是<strong>非空集合$\Omega$的子集</strong>，若</p>
+<ol>
+<li>$\Omega \in F$（任何集合都是自身的子集）；</li>
+<li>集合$A \in F$，且补集$A^c \in F$；</li>
+<li>对于可数个$A_n \in F$，其并集也属于F。</li>
+</ol>
+<p>则$F$为$\Omega$上的一个**$\sigma$代数**，**$(\Omega,F)$称为可测空间**。</p>
+<p>易知$F$中最大的元素就是$\Omega$，联系概率的定义（$P(\cdot)$是一个<strong>定义在$F$上</strong>的实值函数，且$P(\Omega)=1,\forall A\in F\text{有}0\le P(A)\le1$），可以发现概率的定义与$\sigma$代数的定义一一对应，故$(\Omega,F,P)$称为概率空间。</p>
+<h2 id="随机过程">随机过程<a hidden class="anchor" aria-hidden="true" href="#随机过程">#</a></h2>
+<p><strong>在概率空间上的一个随机变量集合</strong>${X(t),t\in T}$<strong>就是随机过程</strong>，$T$被称为指标集或参数集。
+若按照_性质 _进行划分，有两种随机过程非常重要，一个是<strong>平稳过程</strong>，另一个是<strong>独立增量过程</strong>。本文首先讨论平稳过程的定义和性质。</p>
+<p><img loading="lazy" src="mindpic.svg" alt=""  />
+</p>
+<p><strong>NOTE:</strong> 此处对随机过程的分类并不是绝对的，一个具体的过程可以同时属于上述多种类型。以上思维导图只是为了帮助梳理本文结构。</p>
+<h3 id="平稳过程">平稳过程<a hidden class="anchor" aria-hidden="true" href="#平稳过程">#</a></h3>
+<p>平稳过程又分为<strong>严平稳</strong>和<strong>宽平稳</strong>。严平稳要求随机变量的有限维分布不随时间变化 ；宽平稳要求随机过程的所有二阶矩存在 ，一阶矩不随时间变化且协方差函数只与时间间隔有关。</p>
+<p>一开始我顾名思义认为，严平稳要比宽平稳的要求更加严格，因此宽平稳应该包含严平稳。但查阅资料后发现，严平稳过程不一定存在二阶矩，因此不一定是宽平稳过程；而宽平稳过程的有限维分布也不一定不随时间变化，因此宽平稳过程也不一定满足严平稳的性质，具体的反例可见参考文献1。</p>
+<p>仔细分析严平稳和宽平稳的定义，可以发现如果一个严平稳的二阶矩存在，由于其分布不随时间变化，那么该严平稳过程的一阶矩必然不随时间变化，其协方差函数也与时间无关，满足宽平稳的所有要求。因此可以得出结论，<strong>存在二阶矩的严平稳过程必然是宽平稳的</strong>。</p>
+<p>对于平稳性而言，正态过程（有限维分布是多为正态分布）是一种很重要的特例。由于正态过程的有限维联合分布由均值函数和协方差函数唯一确定，若满足宽平稳条件（一阶矩不随时间变化、协方差函数只与时间间隔有关）则必然满足严平稳条件。故<strong>宽平稳的</strong><em>**正态过程 **</em><strong>必然是严平稳的</strong>，所以在证明严平稳时，也可以从该性质入手。</p>
+<h4 id="遍历性">遍历性<a hidden class="anchor" aria-hidden="true" href="#遍历性">#</a></h4>
+<p>接下来讨论平稳过程的性质——<strong>遍历性</strong>。首先给出均值遍历性的定义。</p>
+<p>对于平稳过程（或平稳序列）$X$，均值为$\mu$。若满足</p>
+<p>$$
+\lim_{T \to \infty}\frac{1}{2T}\int_{-T}^TX(t)dt=\mu
+$$</p>
+<p>或</p>
+<p>$$
+\lim_{T \to \infty}\frac{1}{2N+1}\sum_{k=-N}^NX(k)=\mu
+$$</p>
+<p>则称$X$的均值具有遍历性。那么该如何理解均值的遍历性呢？</p>
+<p>注意均值函数的定义$\mu_X(t) = E[X(t)]$，这是一个关于时间变化的函数。若要对某时刻的函数取值进行估计，通常我们要做的就是对处于时刻的随机过程进行大量观测，获得一系列类似${X_1(t),X_2(t),\dots,X_n(t)}$的观测值，然后求他们的算术平均数。</p>
+<p>但是在现实中，这样同一时刻的大量的观测是很难得到的。例如将是否下雨记为随机变量，其关于时间的变化就是一个随机过程，但无论如何，某年某日是否下雨这个事件只会发生一次，我们永远也不可能得到一系列关于该日是否下雨的数据。那要如何估计下雨的概率呢？多观测几日后对数据取平均值不就好了！（此处不考虑季节等时间因素对降雨的影响），其实这在无意中就已经使用了均值的遍历性。</p>
+<p>对于协方差也有类似的遍历性定义，在此不再赘述。<strong>如果一个随机过程的均值和协方差函数都具有遍历性，则称此过程具有遍历性。</strong></p>
+<h3 id="独立增量过程">独立增量过程<a hidden class="anchor" aria-hidden="true" href="#独立增量过程">#</a></h3>
+<p>常识告诉我们，事物当前的状况和它过去的状况之间，往往有着千丝万缕的联系。同样的，大多数随机过程通常不满足独立性，但好在许多过程的增量是相互独立的，这为我们研究提供了极大便利。我们称满足这种条件的随机过程为<strong>独立增量过程</strong>。即对${X(t),t \in T}$，增量$\Delta_i = X(t_{i+1})-X(t_i)$相互独立。</p>
+<h3 id="平稳独立增量过程">平稳独立增量过程<a hidden class="anchor" aria-hidden="true" href="#平稳独立增量过程">#</a></h3>
+<p>类似前文叙述的平稳过程定义，如果过程的增量的分布与时间无关，则称为<strong>平稳增量过程</strong>。同时具有独立增量和平稳增量的过程称为<strong>平稳独立增量过程</strong>。</p>
+<p>和证明严平稳一样，要证明增量平稳并不容易。好在可以通过特征函数入手，若${X(t),t \ge 0}$是一个独立增量过程，其具有平稳增量的充分必要条件是：其特征函数具有可乘性，即</p>
+<p>$$
+\Psi_{X(t+s)}(a)=\Psi_{X(t)}(a)\Psi_{X(s)}(a)
+$$</p>
+<p>该定理可以通过特征函数的定义证明，此处略。</p>
+<h2 id="参考文献">参考文献<a hidden class="anchor" aria-hidden="true" href="#参考文献">#</a></h2>
+<ol>
+<li><a href="https://wenku.baidu.com/view/d673a369561252d380eb6e98.html">严平稳和宽平稳</a></li>
+<li><a href="https://blog.csdn.net/xd15010130025/article/details/103601204">平稳过程基本概念及例题</a></li>
+<li><a href="https://www.zhihu.com/question/31586858">有限维分布的相容性</a></li>
+</ol>
+
+
+  </div>
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://qiaosu.gitee.io/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/">随机过程</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://qiaosu.gitee.io/post/attention_is_all_you_need%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+    <span class="title">« Prev Page</span>
+    <br>
+    <span>Attention is All You Need阅读笔记</span>
+  </a>
+  <a class="next" href="http://qiaosu.gitee.io/post/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/">
+    <span class="title">Next Page »</span>
+    <br>
+    <span>动态分组卷积论文笔记</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    <footer class="footer">
+    <span>&copy; 2021 <a href="http://qiaosu.gitee.io/">渊海</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+    menu.onscroll = function () {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = 'copy';
+
+        function copyingDone() {
+            copybutton.innerText = 'copied!';
+            setTimeout(() => {
+                copybutton.innerText = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

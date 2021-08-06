@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Attention is All You Need阅读笔记 | 渊海</title>
+<meta name="keywords" content="深度学习, Transformer, 论文笔记" />
+<meta name="description" content="Attention发展历程: https://www.cnblogs.com/robert-dlut/p/5952032.html
+Attention Is All You Need: https://arxiv.org/pdf/1706.03762.pdf
+illustrated-transformer: http://jalammar.github.io/illustrated-transformer/
+Transformer Transformer具有一个Encoder-Decoder的结构，文章中说这也是目前（2017年）神经序列转导模型的主流结构。
+Positional Encoding 对每个token的embedding向量，维度为$1\times d_\text{model}$，将该token在句中的位置记作$pos$，则对向量中的第$i$个元素，其Positional Encoding记为$PE$，公式如下： $$ PE(pos,2i) = sin(pos/10000^{2i/d_\text{model}})\\
+PE(pos,2i&#43;1) = cos(pos/10000^{2i/d_\text{model}}) $$ 将$PE$和embedding向量相加，就完成了Positional Encoding。
+Encoder Encoder包含6个相同的编码层
+Encoder Layer 假设$n$个token经过embedding，并加入了位置信息（Positional Encoding）之后，记作矩阵$X$，维度为$n\times d_\text{X}$。$X$首先进入Multi-Head Attention层。
+Multi-Head Attention 对普通的Self-Attention，首先初始化三个可训练的、大小为$d_\text{X} \times d_{\text{model}}$的权重矩阵$W^Q,W^K,W^V$。由矩阵乘积$X \times W$分别得到$Q,K,V$三个矩阵，大小为$n\times d_\text{model}$。从而根据如下公式计算输出： $$ \text{Attention}(Q,K,V) = \text{softmax}(\frac{QK^T}{\sqrt{d_\text{model}}})V $$ 最终输出尺寸为$ n\times d_\text{model}$。若不使用矩阵形式表示，普通Self-Attention相当于对每个token的$q$，计算与其他token的$k$向量的点积，softmax归一化之后作为该token的权重，最后将所有token的向量加权平均作为输出。
+Multi-Head Attention相当于使用数个不同的权重矩阵$W_i$，并行计算Self-Attention，最后将计算结果横向拼接。
+假设共有$8$个这样并行的Self-Attention层，若每一层Self-Attention的权重矩阵大小为$d_\text{X} \times d_\text{v}$，则输出尺寸为$n\times 8d_v$。论文中取$d_v=d_{model}/8$，从而在学习更多信息的前提下，使运算量与普通Self-Attention类似。
+对拼接后的结果$x_c$，乘上额外的参数矩阵$W^O$，最终得到输出尺寸为$ n\times d_\text{model}$，其中$W^O$尺寸为$8d_v\times d_\text{model}$。
+得到了该层的输出后，和残差网络类似的，论文使用了残差连接（residual connection）的方法连接两层，即将原始输入和该层输出直接相加，之后再对此应用Layer Normalization，传入下一层。公式表达如下： $$ \text{LayerNorm}(x&#43;\text{Sublayer}(x)) $$
+Position-wise Feed-Forward Networks Multi-Head Attention层后紧跟两个全连接层。其中第一个全连接层的神经元数量$d_{ff}=2048$，激活函数为ReLU，第二层的神经元数量为$d_\text{model}$。公式表达如下： $$ \text{FFN} = \max(0,xW_1&#43;b_1)W_2&#43;b_2 $$ 对不同位置的token，全连接层的参数是共享的。**论文说这类似于两个卷积核尺寸为$1\times1$的卷积层，这样的卷积层和全连接层可以相互转换，并且根据卷积核维度随意调节输出维度。要注意的是，该前馈网络的对象是每个token的向量，而非整句话。**">
+<meta name="author" content="">
+<link rel="canonical" href="http://qiaosu.gitee.io/post/attention_is_all_you_need%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" />
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.6cba0d81b5f3f42bb578d49f402ba4175aa72b43def148780b8ad714c957c6f5.css" integrity="sha256-bLoNgbXz9Cu1eNSfQCukF1qnK0Pe8Uh4C4rXFMlXxvU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js" integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5&#43;kdJvBz5iKbt6B5PJI="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://qiaosu.gitee.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://qiaosu.gitee.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://qiaosu.gitee.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://qiaosu.gitee.io/apple-touch-icon.png">
+<link rel="mask-icon" href="http://qiaosu.gitee.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.87.0" />
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [["$", "$"]],
+    },
+    displayMath: [
+      ["$$", "$$"],
+      ["\[\[", "\]\]"],
+    ],
+    svg: {
+      fontCache: "global",
+    },
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+></script>
+<meta property="og:title" content="Attention is All You Need阅读笔记" />
+<meta property="og:description" content="Attention发展历程: https://www.cnblogs.com/robert-dlut/p/5952032.html
+Attention Is All You Need: https://arxiv.org/pdf/1706.03762.pdf
+illustrated-transformer: http://jalammar.github.io/illustrated-transformer/
+Transformer Transformer具有一个Encoder-Decoder的结构，文章中说这也是目前（2017年）神经序列转导模型的主流结构。
+Positional Encoding 对每个token的embedding向量，维度为$1\times d_\text{model}$，将该token在句中的位置记作$pos$，则对向量中的第$i$个元素，其Positional Encoding记为$PE$，公式如下： $$ PE(pos,2i) = sin(pos/10000^{2i/d_\text{model}})\\
+PE(pos,2i&#43;1) = cos(pos/10000^{2i/d_\text{model}}) $$ 将$PE$和embedding向量相加，就完成了Positional Encoding。
+Encoder Encoder包含6个相同的编码层
+Encoder Layer 假设$n$个token经过embedding，并加入了位置信息（Positional Encoding）之后，记作矩阵$X$，维度为$n\times d_\text{X}$。$X$首先进入Multi-Head Attention层。
+Multi-Head Attention 对普通的Self-Attention，首先初始化三个可训练的、大小为$d_\text{X} \times d_{\text{model}}$的权重矩阵$W^Q,W^K,W^V$。由矩阵乘积$X \times W$分别得到$Q,K,V$三个矩阵，大小为$n\times d_\text{model}$。从而根据如下公式计算输出： $$ \text{Attention}(Q,K,V) = \text{softmax}(\frac{QK^T}{\sqrt{d_\text{model}}})V $$ 最终输出尺寸为$ n\times d_\text{model}$。若不使用矩阵形式表示，普通Self-Attention相当于对每个token的$q$，计算与其他token的$k$向量的点积，softmax归一化之后作为该token的权重，最后将所有token的向量加权平均作为输出。
+Multi-Head Attention相当于使用数个不同的权重矩阵$W_i$，并行计算Self-Attention，最后将计算结果横向拼接。
+假设共有$8$个这样并行的Self-Attention层，若每一层Self-Attention的权重矩阵大小为$d_\text{X} \times d_\text{v}$，则输出尺寸为$n\times 8d_v$。论文中取$d_v=d_{model}/8$，从而在学习更多信息的前提下，使运算量与普通Self-Attention类似。
+对拼接后的结果$x_c$，乘上额外的参数矩阵$W^O$，最终得到输出尺寸为$ n\times d_\text{model}$，其中$W^O$尺寸为$8d_v\times d_\text{model}$。
+得到了该层的输出后，和残差网络类似的，论文使用了残差连接（residual connection）的方法连接两层，即将原始输入和该层输出直接相加，之后再对此应用Layer Normalization，传入下一层。公式表达如下： $$ \text{LayerNorm}(x&#43;\text{Sublayer}(x)) $$
+Position-wise Feed-Forward Networks Multi-Head Attention层后紧跟两个全连接层。其中第一个全连接层的神经元数量$d_{ff}=2048$，激活函数为ReLU，第二层的神经元数量为$d_\text{model}$。公式表达如下： $$ \text{FFN} = \max(0,xW_1&#43;b_1)W_2&#43;b_2 $$ 对不同位置的token，全连接层的参数是共享的。**论文说这类似于两个卷积核尺寸为$1\times1$的卷积层，这样的卷积层和全连接层可以相互转换，并且根据卷积核维度随意调节输出维度。要注意的是，该前馈网络的对象是每个token的向量，而非整句话。**" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://qiaosu.gitee.io/post/attention_is_all_you_need%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-08-06T19:15:10&#43;08:00" />
+<meta property="article:modified_time" content="2021-08-06T19:15:10&#43;08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Attention is All You Need阅读笔记"/>
+<meta name="twitter:description" content="Attention发展历程: https://www.cnblogs.com/robert-dlut/p/5952032.html
+Attention Is All You Need: https://arxiv.org/pdf/1706.03762.pdf
+illustrated-transformer: http://jalammar.github.io/illustrated-transformer/
+Transformer Transformer具有一个Encoder-Decoder的结构，文章中说这也是目前（2017年）神经序列转导模型的主流结构。
+Positional Encoding 对每个token的embedding向量，维度为$1\times d_\text{model}$，将该token在句中的位置记作$pos$，则对向量中的第$i$个元素，其Positional Encoding记为$PE$，公式如下： $$ PE(pos,2i) = sin(pos/10000^{2i/d_\text{model}})\\
+PE(pos,2i&#43;1) = cos(pos/10000^{2i/d_\text{model}}) $$ 将$PE$和embedding向量相加，就完成了Positional Encoding。
+Encoder Encoder包含6个相同的编码层
+Encoder Layer 假设$n$个token经过embedding，并加入了位置信息（Positional Encoding）之后，记作矩阵$X$，维度为$n\times d_\text{X}$。$X$首先进入Multi-Head Attention层。
+Multi-Head Attention 对普通的Self-Attention，首先初始化三个可训练的、大小为$d_\text{X} \times d_{\text{model}}$的权重矩阵$W^Q,W^K,W^V$。由矩阵乘积$X \times W$分别得到$Q,K,V$三个矩阵，大小为$n\times d_\text{model}$。从而根据如下公式计算输出： $$ \text{Attention}(Q,K,V) = \text{softmax}(\frac{QK^T}{\sqrt{d_\text{model}}})V $$ 最终输出尺寸为$ n\times d_\text{model}$。若不使用矩阵形式表示，普通Self-Attention相当于对每个token的$q$，计算与其他token的$k$向量的点积，softmax归一化之后作为该token的权重，最后将所有token的向量加权平均作为输出。
+Multi-Head Attention相当于使用数个不同的权重矩阵$W_i$，并行计算Self-Attention，最后将计算结果横向拼接。
+假设共有$8$个这样并行的Self-Attention层，若每一层Self-Attention的权重矩阵大小为$d_\text{X} \times d_\text{v}$，则输出尺寸为$n\times 8d_v$。论文中取$d_v=d_{model}/8$，从而在学习更多信息的前提下，使运算量与普通Self-Attention类似。
+对拼接后的结果$x_c$，乘上额外的参数矩阵$W^O$，最终得到输出尺寸为$ n\times d_\text{model}$，其中$W^O$尺寸为$8d_v\times d_\text{model}$。
+得到了该层的输出后，和残差网络类似的，论文使用了残差连接（residual connection）的方法连接两层，即将原始输入和该层输出直接相加，之后再对此应用Layer Normalization，传入下一层。公式表达如下： $$ \text{LayerNorm}(x&#43;\text{Sublayer}(x)) $$
+Position-wise Feed-Forward Networks Multi-Head Attention层后紧跟两个全连接层。其中第一个全连接层的神经元数量$d_{ff}=2048$，激活函数为ReLU，第二层的神经元数量为$d_\text{model}$。公式表达如下： $$ \text{FFN} = \max(0,xW_1&#43;b_1)W_2&#43;b_2 $$ 对不同位置的token，全连接层的参数是共享的。**论文说这类似于两个卷积核尺寸为$1\times1$的卷积层，这样的卷积层和全连接层可以相互转换，并且根据卷积核维度随意调节输出维度。要注意的是，该前馈网络的对象是每个token的向量，而非整句话。**"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://qiaosu.gitee.io/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Attention is All You Need阅读笔记",
+      "item": "http://qiaosu.gitee.io/post/attention_is_all_you_need%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Attention is All You Need阅读笔记",
+  "name": "Attention is All You Need阅读笔记",
+  "description": "Attention发展历程: https://www.cnblogs.com/robert-dlut/p/5952032.html\nAttention Is All You Need: https://arxiv.org/pdf/1706.03762.pdf\nillustrated-transformer: http://jalammar.github.io/illustrated-transformer/\nTransformer Transformer具有一个Encoder-Decoder的结构，文章中说这也是目前（2017年）神经序列转导模型的主流结构。\nPositional Encoding 对每个token的embedding向量，维度为$1\\times d_\\text{model}$，将该token在句中的位置记作$pos$，则对向量中的第$i$个元素，其Positional Encoding记为$PE$，公式如下： $$ PE(pos,2i) = sin(pos/10000^{2i/d_\\text{model}})\\\\\nPE(pos,2i+1) = cos(pos/10000^{2i/d_\\text{model}}) $$ 将$PE$和embedding向量相加，就完成了Positional Encoding。\nEncoder Encoder包含6个相同的编码层\nEncoder Layer 假设$n$个token经过embedding，并加入了位置信息（Positional Encoding）之后，记作矩阵$X$，维度为$n\\times d_\\text{X}$。$X$首先进入Multi-Head Attention层。\nMulti-Head Attention 对普通的Self-Attention，首先初始化三个可训练的、大小为$d_\\text{X} \\times d_{\\text{model}}$的权重矩阵$W^Q,W^K,W^V$。由矩阵乘积$X \\times W$分别得到$Q,K,V$三个矩阵，大小为$n\\times d_\\text{model}$。从而根据如下公式计算输出： $$ \\text{Attention}(Q,K,V) = \\text{softmax}(\\frac{QK^T}{\\sqrt{d_\\text{model}}})V $$ 最终输出尺寸为$ n\\times d_\\text{model}$。若不使用矩阵形式表示，普通Self-Attention相当于对每个token的$q$，计算与其他token的$k$向量的点积，softmax归一化之后作为该token的权重，最后将所有token的向量加权平均作为输出。\nMulti-Head Attention相当于使用数个不同的权重矩阵$W_i$，并行计算Self-Attention，最后将计算结果横向拼接。\n假设共有$8$个这样并行的Self-Attention层，若每一层Self-Attention的权重矩阵大小为$d_\\text{X} \\times d_\\text{v}$，则输出尺寸为$n\\times 8d_v$。论文中取$d_v=d_{model}/8$，从而在学习更多信息的前提下，使运算量与普通Self-Attention类似。\n对拼接后的结果$x_c$，乘上额外的参数矩阵$W^O$，最终得到输出尺寸为$ n\\times d_\\text{model}$，其中$W^O$尺寸为$8d_v\\times d_\\text{model}$。\n得到了该层的输出后，和残差网络类似的，论文使用了残差连接（residual connection）的方法连接两层，即将原始输入和该层输出直接相加，之后再对此应用Layer Normalization，传入下一层。公式表达如下： $$ \\text{LayerNorm}(x+\\text{Sublayer}(x)) $$\nPosition-wise Feed-Forward Networks Multi-Head Attention层后紧跟两个全连接层。其中第一个全连接层的神经元数量$d_{ff}=2048$，激活函数为ReLU，第二层的神经元数量为$d_\\text{model}$。公式表达如下： $$ \\text{FFN} = \\max(0,xW_1+b_1)W_2+b_2 $$ 对不同位置的token，全连接层的参数是共享的。**论文说这类似于两个卷积核尺寸为$1\\times1$的卷积层，这样的卷积层和全连接层可以相互转换，并且根据卷积核维度随意调节输出维度。要注意的是，该前馈网络的对象是每个token的向量，而非整句话。**",
+  "keywords": [
+    "深度学习", "Transformer", "论文笔记"
+  ],
+  "articleBody": "Attention发展历程: https://www.cnblogs.com/robert-dlut/p/5952032.html\nAttention Is All You Need: https://arxiv.org/pdf/1706.03762.pdf\nillustrated-transformer: http://jalammar.github.io/illustrated-transformer/\nTransformer Transformer具有一个Encoder-Decoder的结构，文章中说这也是目前（2017年）神经序列转导模型的主流结构。\nPositional Encoding 对每个token的embedding向量，维度为$1\\times d_\\text{model}$，将该token在句中的位置记作$pos$，则对向量中的第$i$个元素，其Positional Encoding记为$PE$，公式如下： $$ PE(pos,2i) = sin(pos/10000^{2i/d_\\text{model}})\\\\\nPE(pos,2i+1) = cos(pos/10000^{2i/d_\\text{model}}) $$ 将$PE$和embedding向量相加，就完成了Positional Encoding。\nEncoder Encoder包含6个相同的编码层\nEncoder Layer 假设$n$个token经过embedding，并加入了位置信息（Positional Encoding）之后，记作矩阵$X$，维度为$n\\times d_\\text{X}$。$X$首先进入Multi-Head Attention层。\nMulti-Head Attention 对普通的Self-Attention，首先初始化三个可训练的、大小为$d_\\text{X} \\times d_{\\text{model}}$的权重矩阵$W^Q,W^K,W^V$。由矩阵乘积$X \\times W$分别得到$Q,K,V$三个矩阵，大小为$n\\times d_\\text{model}$。从而根据如下公式计算输出： $$ \\text{Attention}(Q,K,V) = \\text{softmax}(\\frac{QK^T}{\\sqrt{d_\\text{model}}})V $$ 最终输出尺寸为$ n\\times d_\\text{model}$。若不使用矩阵形式表示，普通Self-Attention相当于对每个token的$q$，计算与其他token的$k$向量的点积，softmax归一化之后作为该token的权重，最后将所有token的向量加权平均作为输出。\nMulti-Head Attention相当于使用数个不同的权重矩阵$W_i$，并行计算Self-Attention，最后将计算结果横向拼接。\n假设共有$8$个这样并行的Self-Attention层，若每一层Self-Attention的权重矩阵大小为$d_\\text{X} \\times d_\\text{v}$，则输出尺寸为$n\\times 8d_v$。论文中取$d_v=d_{model}/8$，从而在学习更多信息的前提下，使运算量与普通Self-Attention类似。\n对拼接后的结果$x_c$，乘上额外的参数矩阵$W^O$，最终得到输出尺寸为$ n\\times d_\\text{model}$，其中$W^O$尺寸为$8d_v\\times d_\\text{model}$。\n得到了该层的输出后，和残差网络类似的，论文使用了残差连接（residual connection）的方法连接两层，即将原始输入和该层输出直接相加，之后再对此应用Layer Normalization，传入下一层。公式表达如下： $$ \\text{LayerNorm}(x+\\text{Sublayer}(x)) $$\nPosition-wise Feed-Forward Networks Multi-Head Attention层后紧跟两个全连接层。其中第一个全连接层的神经元数量$d_{ff}=2048$，激活函数为ReLU，第二层的神经元数量为$d_\\text{model}$。公式表达如下： $$ \\text{FFN} = \\max(0,xW_1+b_1)W_2+b_2 $$ 对不同位置的token，全连接层的参数是共享的。**论文说这类似于两个卷积核尺寸为$1\\times1$的卷积层，这样的卷积层和全连接层可以相互转换，并且根据卷积核维度随意调节输出维度。要注意的是，该前馈网络的对象是每个token的向量，而非整句话。**\n最后对结果应用残差链接和层标准化，即： $$ \\text{LayerNorm}(x+\\text{Sublayer}(x)) $$\nDecoder Decoder同样由6个相同的Decoder Layer组成。和Encoder不同的是，每个Decoder Layer都在第一层Multi-Head Attention之前加入了一个将之前输出结果作为输入的Masked Multi-Head Attention。该层输出结果和原始输入（总模型输出结果）进行Add\u0026Norm之后，和Encoder的输出一同输入Multi-Head Attention层。\nMasked Multi-Head Attention  需要注意，Transformer 仍属于 Seq2Seq 模型，尽管 Encoder 部分可以并行的生成输入表示，Decoder 部分仍需要以自回归的方式逐词生成输出序列。自然的，在按照该方式生成输出序列时，Decoder 只能从当前词前面的词中获取信息（使后面序列的 Attention 值为0），因此需要加入 Mask（掩码）。\n具体方式是在相关性系数矩阵上累加一个 Mask 矩阵。该矩阵在需要 Mask 的位置的值为 -inf（具体实现时是一个非常小的数，比如 1e-9），其余位置为 0，这样在进行了 Softmax 归一化操作之后，被掩码掉的位置计算得到的权重便近似为 0。\n 修改后的矩阵化公式为： $$ \\text{Attention}(Q,K,V) = \\text{softmax}(\\frac{QK^T}{\\sqrt{d_\\text{model}}}+Mask)V $$\nLinear+Softmax 经过了Encoder和Decoder的运算，最后的结果将由Linear层转换为维度为$1\\times d_\\text{vocab}$的向量，然后经过Softmax函数将其转换为概率，从而找到概率最高的单词作为下一个输出（argmax）\n",
+  "wordCount" : "124",
+  "inLanguage": "en",
+  "datePublished": "2021-08-06T19:15:10+08:00",
+  "dateModified": "2021-08-06T19:15:10+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://qiaosu.gitee.io/post/attention_is_all_you_need%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "渊海",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://qiaosu.gitee.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: #1d1e20;
+                --entry: #2e2e33;
+                --primary: rgba(255, 255, 255, 0.84);
+                --secondary: rgba(255, 255, 255, 0.56);
+                --tertiary: rgba(255, 255, 255, 0.16);
+                --content: rgba(255, 255, 255, 0.74);
+                --hljs-bg: #2e2e33;
+                --code-bg: #37383e;
+                --border: #333;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://qiaosu.gitee.io/" accesskey="h" title="渊海 (Alt + H)">渊海</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://qiaosu.gitee.io/archives" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://qiaosu.gitee.io/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://qiaosu.gitee.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://qiaosu.gitee.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      Attention is All You Need阅读笔记
+    </h1>
+    <div class="post-meta">August 6, 2021
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <div class="details">Table of Contents</div>
+        </summary>
+        <div class="inner"><ul>
+                <li>
+                    <a href="#transformer" aria-label="Transformer">Transformer</a><ul>
+                        
+                <li>
+                    <a href="#positional-encoding" aria-label="Positional Encoding">Positional Encoding</a></li>
+                <li>
+                    <a href="#encoder" aria-label="Encoder">Encoder</a><ul>
+                        
+                <li>
+                    <a href="#encoder-layer" aria-label="Encoder Layer">Encoder Layer</a><ul>
+                        
+                <li>
+                    <a href="#multi-head-attention" aria-label="Multi-Head Attention">Multi-Head Attention</a></li>
+                <li>
+                    <a href="#position-wise-feed-forward-networks" aria-label="Position-wise Feed-Forward Networks">Position-wise Feed-Forward Networks</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#decoder" aria-label="Decoder">Decoder</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#masked-multi-head-attention" aria-label="Masked Multi-Head Attention">Masked Multi-Head Attention</a></li></ul>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#linearsoftmax" aria-label="Linear&#43;Softmax">Linear+Softmax</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>Attention发展历程: <a href="https://www.cnblogs.com/robert-dlut/p/5952032.html">https://www.cnblogs.com/robert-dlut/p/5952032.html</a></p>
+<p>Attention Is All You Need: <a href="https://arxiv.org/pdf/1706.03762.pdf">https://arxiv.org/pdf/1706.03762.pdf</a></p>
+<p>illustrated-transformer: <a href="http://jalammar.github.io/illustrated-transformer/">http://jalammar.github.io/illustrated-transformer/</a></p>
+<h2 id="transformer">Transformer<a hidden class="anchor" aria-hidden="true" href="#transformer">#</a></h2>
+<p><img loading="lazy" src="transformers.png" alt=""  />
+</p>
+<p>Transformer具有一个Encoder-Decoder的结构，文章中说这也是目前（2017年）神经序列转导模型的主流结构。</p>
+<h3 id="positional-encoding">Positional Encoding<a hidden class="anchor" aria-hidden="true" href="#positional-encoding">#</a></h3>
+<p>对每个token的embedding向量，维度为$1\times d_\text{model}$，将该token在句中的位置记作$pos$，则对向量中的第$i$个元素，其Positional Encoding记为$PE$，公式如下：
+$$
+PE(pos,2i) = sin(pos/10000^{2i/d_\text{model}})\\<br>
+PE(pos,2i+1) = cos(pos/10000^{2i/d_\text{model}})
+$$
+将$PE$和embedding向量相加，就完成了Positional Encoding。</p>
+<h3 id="encoder">Encoder<a hidden class="anchor" aria-hidden="true" href="#encoder">#</a></h3>
+<p>Encoder包含6个相同的编码层</p>
+<h4 id="encoder-layer">Encoder Layer<a hidden class="anchor" aria-hidden="true" href="#encoder-layer">#</a></h4>
+<p>假设$n$个token经过embedding，并加入了位置信息（Positional Encoding）之后，记作矩阵$X$，维度为$n\times d_\text{X}$。$X$首先进入Multi-Head Attention层。</p>
+<h5 id="multi-head-attention">Multi-Head Attention<a hidden class="anchor" aria-hidden="true" href="#multi-head-attention">#</a></h5>
+<p>对普通的Self-Attention，首先初始化三个可训练的、大小为$d_\text{X} \times d_{\text{model}}$的权重矩阵$W^Q,W^K,W^V$。由矩阵乘积$X \times W$分别得到$Q,K,V$三个矩阵，大小为$n\times d_\text{model}$。从而根据如下公式计算输出：
+$$
+\text{Attention}(Q,K,V) = \text{softmax}(\frac{QK^T}{\sqrt{d_\text{model}}})V
+$$
+最终输出尺寸为$ n\times d_\text{model}$。若不使用矩阵形式表示，普通Self-Attention相当于对每个token的$q$，计算与其他token的$k$向量的点积，softmax归一化之后作为该token的权重，最后将所有token的向量加权平均作为输出。</p>
+<p>Multi-Head Attention相当于使用数个不同的权重矩阵$W_i$，并行计算Self-Attention，最后将计算结果横向拼接。</p>
+<p>假设共有$8$个这样并行的Self-Attention层，若每一层Self-Attention的权重矩阵大小为$d_\text{X} \times d_\text{v}$，则输出尺寸为$n\times 8d_v$。论文中取$d_v=d_{model}/8$，从而在学习更多信息的前提下，使运算量与普通Self-Attention类似。</p>
+<p>对拼接后的结果$x_c$，乘上额外的参数矩阵$W^O$，最终得到输出尺寸为$ n\times d_\text{model}$，其中$W^O$尺寸为$8d_v\times d_\text{model}$。</p>
+<p>得到了该层的输出后，和残差网络类似的，论文使用了残差连接（residual connection）的方法连接两层，即将原始输入和该层输出直接相加，之后再对此应用Layer Normalization，传入下一层。公式表达如下：
+$$
+\text{LayerNorm}(x+\text{Sublayer}(x))
+$$</p>
+<h5 id="position-wise-feed-forward-networks">Position-wise Feed-Forward Networks<a hidden class="anchor" aria-hidden="true" href="#position-wise-feed-forward-networks">#</a></h5>
+<p>Multi-Head Attention层后紧跟两个全连接层。其中第一个全连接层的神经元数量$d_{ff}=2048$，激活函数为ReLU，第二层的神经元数量为$d_\text{model}$。公式表达如下：
+$$
+\text{FFN} = \max(0,xW_1+b_1)W_2+b_2
+$$
+对不同位置的token，全连接层的参数是共享的。**论文说这类似于两个卷积核尺寸为$1\times1$的卷积层，这样的卷积层和全连接层可以相互转换，并且根据卷积核维度随意调节输出维度。要注意的是，该前馈网络的对象是每个token的向量，而非整句话。**</p>
+<p>最后对结果应用残差链接和层标准化，即：
+$$
+\text{LayerNorm}(x+\text{Sublayer}(x))
+$$</p>
+<h3 id="decoder">Decoder<a hidden class="anchor" aria-hidden="true" href="#decoder">#</a></h3>
+<p>Decoder同样由6个相同的Decoder Layer组成。和Encoder不同的是，每个Decoder Layer都在第一层Multi-Head Attention之前加入了一个将之前输出结果作为输入的Masked Multi-Head Attention。该层输出结果和原始输入（总模型输出结果）进行Add&amp;Norm之后，和Encoder的输出一同输入Multi-Head Attention层。</p>
+<h5 id="masked-multi-head-attention">Masked Multi-Head Attention<a hidden class="anchor" aria-hidden="true" href="#masked-multi-head-attention">#</a></h5>
+<blockquote>
+<p>需要注意，Transformer 仍属于 Seq2Seq 模型，尽管 Encoder 部分可以并行的生成输入表示，Decoder 部分仍需要以自回归的方式逐词生成输出序列。自然的，在按照该方式生成输出序列时，Decoder 只能从当前词前面的词中获取信息（使后面序列的 Attention 值为0），因此需要加入 Mask（掩码）。</p>
+<p>具体方式是在相关性系数矩阵上累加一个 Mask 矩阵。该矩阵在需要 Mask 的位置的值为 -inf（具体实现时是一个非常小的数，比如 1e-9），其余位置为 0，这样在进行了 Softmax 归一化操作之后，被掩码掉的位置计算得到的权重便近似为 0。</p>
+</blockquote>
+<p>修改后的矩阵化公式为：
+$$
+\text{Attention}(Q,K,V) = \text{softmax}(\frac{QK^T}{\sqrt{d_\text{model}}}+Mask)V
+$$</p>
+<h3 id="linearsoftmax">Linear+Softmax<a hidden class="anchor" aria-hidden="true" href="#linearsoftmax">#</a></h3>
+<p>经过了Encoder和Decoder的运算，最后的结果将由Linear层转换为维度为$1\times d_\text{vocab}$的向量，然后经过Softmax函数将其转换为概率，从而找到概率最高的单词作为下一个输出（argmax）</p>
+
+
+  </div>
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://qiaosu.gitee.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></li>
+      <li><a href="http://qiaosu.gitee.io/tags/transformer/">Transformer</a></li>
+      <li><a href="http://qiaosu.gitee.io/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/">论文笔记</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://qiaosu.gitee.io/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">
+    <span class="title">Next Page »</span>
+    <br>
+    <span>随机过程基本概念</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    <footer class="footer">
+    <span>&copy; 2021 <a href="http://qiaosu.gitee.io/">渊海</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+    menu.onscroll = function () {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = 'copy';
+
+        function copyingDone() {
+            copybutton.innerText = 'copied!';
+            setTimeout(() => {
+                copybutton.innerText = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>深度学习 on 渊海</title>
+    <link>http://qiaosu.gitee.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</link>
+    <description>Recent content in 深度学习 on 渊海</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 06 Aug 2021 19:15:10 +0800</lastBuildDate><atom:link href="http://qiaosu.gitee.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Attention is All You Need阅读笔记</title>
+      <link>http://qiaosu.gitee.io/post/attention_is_all_you_need%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Fri, 06 Aug 2021 19:15:10 +0800</pubDate>
+      
+      <guid>http://qiaosu.gitee.io/post/attention_is_all_you_need%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</guid>
+      <description>Attention发展历程: https://www.cnblogs.com/robert-dlut/p/5952032.html
+Attention Is All You Need: https://arxiv.org/pdf/1706.03762.pdf
+illustrated-transformer: http://jalammar.github.io/illustrated-transformer/
+Transformer Transformer具有一个Encoder-Decoder的结构，文章中说这也是目前（2017年）神经序列转导模型的主流结构。
+Positional Encoding 对每个token的embedding向量，维度为$1\times d_\text{model}$，将该token在句中的位置记作$pos$，则对向量中的第$i$个元素，其Positional Encoding记为$PE$，公式如下： $$ PE(pos,2i) = sin(pos/10000^{2i/d_\text{model}})\\
+PE(pos,2i+1) = cos(pos/10000^{2i/d_\text{model}}) $$ 将$PE$和embedding向量相加，就完成了Positional Encoding。
+Encoder Encoder包含6个相同的编码层
+Encoder Layer 假设$n$个token经过embedding，并加入了位置信息（Positional Encoding）之后，记作矩阵$X$，维度为$n\times d_\text{X}$。$X$首先进入Multi-Head Attention层。
+Multi-Head Attention 对普通的Self-Attention，首先初始化三个可训练的、大小为$d_\text{X} \times d_{\text{model}}$的权重矩阵$W^Q,W^K,W^V$。由矩阵乘积$X \times W$分别得到$Q,K,V$三个矩阵，大小为$n\times d_\text{model}$。从而根据如下公式计算输出： $$ \text{Attention}(Q,K,V) = \text{softmax}(\frac{QK^T}{\sqrt{d_\text{model}}})V $$ 最终输出尺寸为$ n\times d_\text{model}$。若不使用矩阵形式表示，普通Self-Attention相当于对每个token的$q$，计算与其他token的$k$向量的点积，softmax归一化之后作为该token的权重，最后将所有token的向量加权平均作为输出。
+Multi-Head Attention相当于使用数个不同的权重矩阵$W_i$，并行计算Self-Attention，最后将计算结果横向拼接。
+假设共有$8$个这样并行的Self-Attention层，若每一层Self-Attention的权重矩阵大小为$d_\text{X} \times d_\text{v}$，则输出尺寸为$n\times 8d_v$。论文中取$d_v=d_{model}/8$，从而在学习更多信息的前提下，使运算量与普通Self-Attention类似。
+对拼接后的结果$x_c$，乘上额外的参数矩阵$W^O$，最终得到输出尺寸为$ n\times d_\text{model}$，其中$W^O$尺寸为$8d_v\times d_\text{model}$。
+得到了该层的输出后，和残差网络类似的，论文使用了残差连接（residual connection）的方法连接两层，即将原始输入和该层输出直接相加，之后再对此应用Layer Normalization，传入下一层。公式表达如下： $$ \text{LayerNorm}(x+\text{Sublayer}(x)) $$
+Position-wise Feed-Forward Networks Multi-Head Attention层后紧跟两个全连接层。其中第一个全连接层的神经元数量$d_{ff}=2048$，激活函数为ReLU，第二层的神经元数量为$d_\text{model}$。公式表达如下： $$ \text{FFN} = \max(0,xW_1+b_1)W_2+b_2 $$ 对不同位置的token，全连接层的参数是共享的。**论文说这类似于两个卷积核尺寸为$1\times1$的卷积层，这样的卷积层和全连接层可以相互转换，并且根据卷积核维度随意调节输出维度。要注意的是，该前馈网络的对象是每个token的向量，而非整句话。**</description>
+    </item>
+    
+    <item>
+      <title>动态分组卷积论文笔记</title>
+      <link>http://qiaosu.gitee.io/post/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Fri, 06 Aug 2021 19:11:58 +0800</pubDate>
+      
+      <guid>http://qiaosu.gitee.io/post/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</guid>
+      <description>蓝色和绿色两个分支代表两个头，同样的输入同时进入两个头。每个头的操作都一样，但是拥有独立的权重。下文以其中一个头的操作为例。
+  对输入按通道求均值，获得通道数维度的向量（Subsample）。
+  输入进入一个两层的MLP（ReLu激活），得到维度不变的稀疏向量（Saliency Generator），可以视为各通道的重要性得分或权重。
+  该稀疏向量的均值即为图中的L1 loss，原文希望通过对L1 loss的优化得到稀疏解。
+  按照提前设置的比例将重要性得分最低的几个通道的权重设为0（Gate）。
+  对每个通道乘以权重，此时有的通道数值被扩大，有的通道数值被缩小，有的通道数值被变为0。然后做普通卷积，得到该头的输出。
+  把各头的输出按照通道拼接，得到动态分组卷积的输出。
+  维度推导  输入$(N,C,H,W)$ 分$h$个头，就创建$h$个Saliency Generator  Saliency Generator  原论文直言这部分参考了SENet的思想，遵循SEBlock的设计规范。
+  按通道求均值得到$AVG_X = (N,C)$
+  全连接+ReLu，$ReLu((N,C)\times(C,\frac{C}{d})) = ReLu((N,\frac{C}{d}))$，$d$为squeeze rate，是超参数，原文设为16。
+  全连接+ReLu，$Mask = ReLu((N,\frac{C}{d})\times (\frac{C}{d},C)) = ReLu((N,C))$
+  Gating Strategy 若$\text{inactive_channels}=0$​​，$Mask$​​即为各通道的权重。若$\text{inactive_channels}&amp;gt;0$​​，则把权重最低的inactive_channels个通道的权重设为$0$​​。
+ 对每个头，对输入$(N,C,H,W)$，按维度$C$乘以权重$Mask$，获得新的feature_map。 把所有头得到的feature_map按通道拼接，获得$(N,h*C,H,W)$并按通道打乱（为什么打乱？）。 分$h$组卷积，输出$(N,C_{\text{out}},H,W)$  参数量计算 普通卷积 $$ C_{\text{in}}C_{\text{out}}HW $$</description>
+    </item>
+    
+  </channel>
+</rss>
