@@ -6,7 +6,43 @@
     <description>Recent content in Tags on 渊海</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 06 Aug 2021 19:15:10 +0800</lastBuildDate><atom:link href="http://qiaosu.gitee.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Aug 2021 19:46:08 +0800</lastBuildDate><atom:link href="http://qiaosu.gitee.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CRF</title>
+      <link>http://qiaosu.gitee.io/tags/crf/</link>
+      <pubDate>Fri, 06 Aug 2021 19:46:08 +0800</pubDate>
+      
+      <guid>http://qiaosu.gitee.io/tags/crf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>机器学习</title>
+      <link>http://qiaosu.gitee.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
+      <pubDate>Fri, 06 Aug 2021 19:46:08 +0800</pubDate>
+      
+      <guid>http://qiaosu.gitee.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>条件随机场</title>
+      <link>http://qiaosu.gitee.io/tags/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA/</link>
+      <pubDate>Fri, 06 Aug 2021 19:46:08 +0800</pubDate>
+      
+      <guid>http://qiaosu.gitee.io/tags/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>经典算法</title>
+      <link>http://qiaosu.gitee.io/tags/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Fri, 06 Aug 2021 19:46:08 +0800</pubDate>
+      
+      <guid>http://qiaosu.gitee.io/tags/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Transformer</title>
       <link>http://qiaosu.gitee.io/tags/transformer/</link>

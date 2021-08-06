@@ -26,7 +26,7 @@ Multi-Head Attention相当于使用数个不同的权重矩阵$W_i$，并行计�
 假设共有$8$个这样并行的Self-Attention层，若每一层Self-Attention的权重矩阵大小为$d_\text{X} \times d_\text{v}$，则输出尺寸为$n\times 8d_v$。论文中取$d_v=d_{model}/8$，从而在学习更多信息的前提下，使运算量与普通Self-Attention类似。
 对拼接后的结果$x_c$，乘上额外的参数矩阵$W^O$，最终得到输出尺寸为$ n\times d_\text{model}$，其中$W^O$尺寸为$8d_v\times d_\text{model}$。
 得到了该层的输出后，和残差网络类似的，论文使用了残差连接（residual connection）的方法连接两层，即将原始输入和该层输出直接相加，之后再对此应用Layer Normalization，传入下一层。公式表达如下： $$ \text{LayerNorm}(x+\text{Sublayer}(x)) $$
-Position-wise Feed-Forward Networks Multi-Head Attention层后紧跟两个全连接层。其中第一个全连接层的神经元数量$d_{ff}=2048$，激活函数为ReLU，第二层的神经元数量为$d_\text{model}$。公式表达如下： $$ \text{FFN} = \max(0,xW_1+b_1)W_2+b_2 $$ 对不同位置的token，全连接层的参数是共享的。**论文说这类似于两个卷积核尺寸为$1\times1$的卷积层，这样的卷积层和全连接层可以相互转换，并且根据卷积核维度随意调节输出维度。要注意的是，该前馈网络的对象是每个token的向量，而非整句话。**</description>
+Position-wise Feed-Forward Networks Multi-Head Attention层后紧跟两个全连接层。其中第一个全连接层的神经元数量$d_{ff}=2048$，激活函数为ReLU，第二层的神经元数量为$d_\text{model}$。公式表达如下： $$ \text{FFN} = \max(0,xW_1+b_1)W_2+b_2 $$ 对不同位置的token，全连接层的参数是共享的。 论文说这类似于两个卷积核尺寸为$1\times1$​ 的卷积层，这样的卷积层和全连接层可以相互转换，并且根据卷积核维度随意调节输出维度。要注意的是，该前馈网络的对象是每个token的向量，而非整句话。</description>
     </item>
     
   </channel>

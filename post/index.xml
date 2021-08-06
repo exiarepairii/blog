@@ -6,7 +6,29 @@
     <description>Recent content in Posts on 渊海</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 06 Aug 2021 19:15:10 +0800</lastBuildDate><atom:link href="http://qiaosu.gitee.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Aug 2021 19:46:08 +0800</lastBuildDate><atom:link href="http://qiaosu.gitee.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>条件随机场笔记</title>
+      <link>http://qiaosu.gitee.io/post/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Fri, 06 Aug 2021 19:46:08 +0800</pubDate>
+      
+      <guid>http://qiaosu.gitee.io/post/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E7%AC%94%E8%AE%B0/</guid>
+      <description>条件随机场是一个序列模型，被广泛应用在NLP的标注任务上。
+目标 假设输入一个序列 $$ X = \left(x_1,x_2,\dots,x_n\right) $$ CRF模型需要预测序列中每个元素$x_i$对应的标签$y_i$，即输出一个序列 $$ \hat{Y} = \left(\hat{y}_1,\hat{y}_2,\dots,\hat{y}_n\right) $$
+假设  只有相邻的标签之间具有依赖关系（线性链、无向图）。 $y_i$依赖于X  训练 前向传播 特征工程 转移特征 构造$K_1$条关于$y_i$和$y_{i-1}$的特征，即 $$ t_k = t_k(y_{i-1},y_{i},x,i) = \left{\begin{array}\\
+1, \text{condition_1} \\
+0, \text{condition_0} \end{array}\right. $$
+状态特征 构造$K_2$条关于$y_i$的特征，即 $$ s_k = s_k(y_{i},x,i) = \left{\begin{array}\\
+1, \text{condition_1} \\
+0, \text{condition_0} \end{array}\right. $$
+计算概率 假设每个$y_i$都有两种可能的取值，即$y_i \in {1,2}$。当序列长度等于$3$时，所有可能的路径如下图所示
+如果$Y = (1,2,1)$，即为下图中的红色路径
+我们对如图所示的红色路径进行上文所述的特征工程。
+转移特征共有$K_1\times 2$个（$i \in {2,3}$），状态特征共有$K_2 \times 3$个（序列包含$3$个结点）。将这些特征拼接起来，我们将得到一个长度为$K = 2K_1+3K_2$的一维向量，这个向量完全是由$0$和$1$组成的。
+将这个向量馈入一个单层的感知机（没有激活函数），我们将得到一个数值，可以视为该路径的得分。
+本例中每个$y_i$有$2$种可能的取值，所以总共存在$2^3$条可能的路径。对这些路径全部进行特征工程，我们将得到$2^3=8$个由0和1组成的向量，可以表示为一个$8$行$K$列的矩阵$X_F$。</description>
+    </item>
+    
     <item>
       <title>Attention is All You Need阅读笔记</title>
       <link>http://qiaosu.gitee.io/post/attention_is_all_you_need%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</link>
@@ -26,7 +48,7 @@ Multi-Head Attention相当于使用数个不同的权重矩阵$W_i$，并行计�
 假设共有$8$个这样并行的Self-Attention层，若每一层Self-Attention的权重矩阵大小为$d_\text{X} \times d_\text{v}$，则输出尺寸为$n\times 8d_v$。论文中取$d_v=d_{model}/8$，从而在学习更多信息的前提下，使运算量与普通Self-Attention类似。
 对拼接后的结果$x_c$，乘上额外的参数矩阵$W^O$，最终得到输出尺寸为$ n\times d_\text{model}$，其中$W^O$尺寸为$8d_v\times d_\text{model}$。
 得到了该层的输出后，和残差网络类似的，论文使用了残差连接（residual connection）的方法连接两层，即将原始输入和该层输出直接相加，之后再对此应用Layer Normalization，传入下一层。公式表达如下： $$ \text{LayerNorm}(x+\text{Sublayer}(x)) $$
-Position-wise Feed-Forward Networks Multi-Head Attention层后紧跟两个全连接层。其中第一个全连接层的神经元数量$d_{ff}=2048$，激活函数为ReLU，第二层的神经元数量为$d_\text{model}$。公式表达如下： $$ \text{FFN} = \max(0,xW_1+b_1)W_2+b_2 $$ 对不同位置的token，全连接层的参数是共享的。**论文说这类似于两个卷积核尺寸为$1\times1$的卷积层，这样的卷积层和全连接层可以相互转换，并且根据卷积核维度随意调节输出维度。要注意的是，该前馈网络的对象是每个token的向量，而非整句话。**</description>
+Position-wise Feed-Forward Networks Multi-Head Attention层后紧跟两个全连接层。其中第一个全连接层的神经元数量$d_{ff}=2048$，激活函数为ReLU，第二层的神经元数量为$d_\text{model}$。公式表达如下： $$ \text{FFN} = \max(0,xW_1+b_1)W_2+b_2 $$ 对不同位置的token，全连接层的参数是共享的。 论文说这类似于两个卷积核尺寸为$1\times1$​ 的卷积层，这样的卷积层和全连接层可以相互转换，并且根据卷积核维度随意调节输出维度。要注意的是，该前馈网络的对象是每个token的向量，而非整句话。</description>
     </item>
     
     <item>
@@ -37,14 +59,14 @@ Position-wise Feed-Forward Networks Multi-Head Attention层后紧跟两个全连
       <guid>http://qiaosu.gitee.io/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</guid>
       <description>随机过程基本概念 最近主要学习了随机过程，故对书中一些概念进行整理，并附上自己的理解。一方面方便日后查阅，另一方面有助于在整理过程中查漏补缺。
 测度空间 首先对$\sigma$代数的定义进行归纳。对于集合族F（集合组成的集合），其元素都是非空集合$\Omega$的子集，若
- $\Omega \in F$（任何集合都是自身的子集）； 集合$A \in F$，且补集$A^c \in F$； 对于可数个$A_n \in F$，其并集也属于F。  则$F$为$\Omega$上的一个**$\sigma$代数**，**$(\Omega,F)$称为可测空间**。
+ $\Omega \in F$（任何集合都是自身的子集）； 集合$A \in F$，且补集$A^c \in F$； 对于可数个$A_n \in F$，其并集也属于F。  则$F$为$\Omega$上的一个$\sigma$代数，$(\Omega,F)$称为可测空间。
 易知$F$中最大的元素就是$\Omega$，联系概率的定义（$P(\cdot)$是一个定义在$F$上的实值函数，且$P(\Omega)=1,\forall A\in F\text{有}0\le P(A)\le1$），可以发现概率的定义与$\sigma$代数的定义一一对应，故$(\Omega,F,P)$称为概率空间。
-随机过程 在概率空间上的一个随机变量集合${X(t),t\in T}$就是随机过程，$T$被称为指标集或参数集。 若按照_性质 _进行划分，有两种随机过程非常重要，一个是平稳过程，另一个是独立增量过程。本文首先讨论平稳过程的定义和性质。
+随机过程 在概率空间上的一个随机变量集合 ${X(t),t\in T}$ 就是随机过程，$T$被称为指标集或参数集。 若按照_性质 _进行划分，有两种随机过程非常重要，一个是 平稳过程，另一个是 独立增量过程。本文首先讨论平稳过程的定义和性质。
 NOTE: 此处对随机过程的分类并不是绝对的，一个具体的过程可以同时属于上述多种类型。以上思维导图只是为了帮助梳理本文结构。
 平稳过程 平稳过程又分为严平稳和宽平稳。严平稳要求随机变量的有限维分布不随时间变化 ；宽平稳要求随机过程的所有二阶矩存在 ，一阶矩不随时间变化且协方差函数只与时间间隔有关。
 一开始我顾名思义认为，严平稳要比宽平稳的要求更加严格，因此宽平稳应该包含严平稳。但查阅资料后发现，严平稳过程不一定存在二阶矩，因此不一定是宽平稳过程；而宽平稳过程的有限维分布也不一定不随时间变化，因此宽平稳过程也不一定满足严平稳的性质，具体的反例可见参考文献1。
 仔细分析严平稳和宽平稳的定义，可以发现如果一个严平稳的二阶矩存在，由于其分布不随时间变化，那么该严平稳过程的一阶矩必然不随时间变化，其协方差函数也与时间无关，满足宽平稳的所有要求。因此可以得出结论，存在二阶矩的严平稳过程必然是宽平稳的。
-对于平稳性而言，正态过程（有限维分布是多为正态分布）是一种很重要的特例。由于正态过程的有限维联合分布由均值函数和协方差函数唯一确定，若满足宽平稳条件（一阶矩不随时间变化、协方差函数只与时间间隔有关）则必然满足严平稳条件。故宽平稳的**正态过程 **必然是严平稳的，所以在证明严平稳时，也可以从该性质入手。
+对于平稳性而言，正态过程（有限维分布是多为正态分布）是一种很重要的特例。由于正态过程的有限维联合分布由均值函数和协方差函数唯一确定，若满足宽平稳条件（一阶矩不随时间变化、协方差函数只与时间间隔有关）则必然满足严平稳条件。故宽平稳的正态过程必然是严平稳的，所以在证明严平稳时，也可以从该性质入手。
 遍历性 接下来讨论平稳过程的性质——遍历性。首先给出均值遍历性的定义。
 对于平稳过程（或平稳序列）$X$，均值为$\mu$。若满足
 $$ \lim_{T \to \infty}\frac{1}{2T}\int_{-T}^TX(t)dt=\mu $$
@@ -56,8 +78,7 @@ $$ \lim_{T \to \infty}\frac{1}{2N+1}\sum_{k=-N}^NX(k)=\mu $$
 对于协方差也有类似的遍历性定义，在此不再赘述。如果一个随机过程的均值和协方差函数都具有遍历性，则称此过程具有遍历性。
 独立增量过程 常识告诉我们，事物当前的状况和它过去的状况之间，往往有着千丝万缕的联系。同样的，大多数随机过程通常不满足独立性，但好在许多过程的增量是相互独立的，这为我们研究提供了极大便利。我们称满足这种条件的随机过程为独立增量过程。即对${X(t),t \in T}$，增量$\Delta_i = X(t_{i+1})-X(t_i)$相互独立。
 平稳独立增量过程 类似前文叙述的平稳过程定义，如果过程的增量的分布与时间无关，则称为平稳增量过程。同时具有独立增量和平稳增量的过程称为平稳独立增量过程。
-和证明严平稳一样，要证明增量平稳并不容易。好在可以通过特征函数入手，若${X(t),t \ge 0}$是一个独立增量过程，其具有平稳增量的充分必要条件是：其特征函数具有可乘性，即
-$$ \Psi_{X(t+s)}(a)=\Psi_{X(t)}(a)\Psi_{X(s)}(a) $$</description>
+和证明严平稳一样，要证明增量平稳并不容易。好在可以通过特征函数入手，若${X(t),t \ge 0}$是一个独立增量过程，其具有平稳增量的充分必要条件是：其特征函数具有可乘性，即</description>
     </item>
     
     <item>
