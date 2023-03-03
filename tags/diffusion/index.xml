@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Diffusion on 渊海</title>
+    <link>https://exiarepairii.github.io/blog/tags/diffusion/</link>
+    <description>Recent content in Diffusion on 渊海</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 03 Mar 2023 19:00:10 +0800</lastBuildDate><atom:link href="https://exiarepairii.github.io/blog/tags/diffusion/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Denoising Diffusion Probabilistic Models阅读笔记</title>
+      <link>https://exiarepairii.github.io/blog/post/denoising-diffusion-model%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Fri, 03 Mar 2023 19:00:10 +0800</pubDate>
+      
+      <guid>https://exiarepairii.github.io/blog/post/denoising-diffusion-model%E7%AC%94%E8%AE%B0/</guid>
+      <description>Denoising Diffusion Probabilistic Models https://arxiv.org/abs/2006.11239
+
+第一篇用diffusion model做图像生成的
+ Diffusion models are straightforward to define and efficient to train, but to the best of our knowledge, there has been no demonstration that they are capable of generating high quality samples.
+ 背景 逆向过程 由标准高斯噪声$x_T$转移到原始输入$x_0$的马尔可夫链。定义
+此处$p_{\theta}(x_{0:T})=p_{\theta}(x_0,x_1,\dots,x_T)$，对$x_{1:T}$积分可得原始输入$x_0$的边缘分布
+$$ p_{\theta}(x_0) = \int p_{\theta}(x_{0:T})dx_{1:T} $$
+每一步的转移概率服从高斯分布，其均值和方差由前一个状态计算得到。
+前向（扩散）过程 由原始输入$x_0$逐渐加噪声，得到各向独立的高斯噪声$x_T\sim N(x_T;0,I)$，也是一个马尔可夫过程
+转移概率由超参$\beta_t$和前一个状态$x_{t-1}$共同决定。看起来$\beta_t \in [0,1]$，而且方差越大均值约小，这个有什么深意？
+前向过程中任意时刻的条件概率都可以写作
+$$ q(x_t|x_0) = N(x_t;\sqrt{\overline{\alpha}_t}x_0,(1-\overline{\alpha}_t)I); \quad \text{where} \quad\alpha_t := 1-\beta_t ,\quad \overline{\alpha}t := \prod{s=1}^t \alpha_s $$</description>
+    </item>
+    
+  </channel>
+</rss>
