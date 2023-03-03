@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Others on 渊海</title>
-    <link>http://qiaosu.gitee.io/others/</link>
+    <link>https://exiarepairii.github.io/blog/others/</link>
     <description>Recent content in Others on 渊海</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 27 Aug 2021 23:11:18 +0800</lastBuildDate><atom:link href="http://qiaosu.gitee.io/others/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 27 Aug 2021 23:11:18 +0800</lastBuildDate><atom:link href="https://exiarepairii.github.io/blog/others/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Post</title>
-      <link>http://qiaosu.gitee.io/others/post/</link>
+      <link>https://exiarepairii.github.io/blog/others/post/</link>
       <pubDate>Fri, 27 Aug 2021 23:11:18 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/others/post/</guid>
+      <guid>https://exiarepairii.github.io/blog/others/post/</guid>
       <description>https://lab-1304686552.cos.ap-shanghai.myqcloud.com/TeamViewerPortable.zip?q-sign-algorithm=sha1&amp;amp;q-ak=AKIDlIWONKTjvYgk6sHQmEMRRddsU8H8WXfw&amp;amp;q-sign-time=1630156458;1630163658&amp;amp;q-key-time=1630156458;1630163658&amp;amp;q-header-list=&amp;amp;q-url-param-list=&amp;amp;q-signature=d1b8d8e2d24bde2ad37b6e8fd47084bda8a21179&amp;amp;x-cos-security-token=9e5434dd010ebd5fd61980859465a47910045e0b20001</description>
     </item>
     
     <item>
       <title>CardInfo</title>
-      <link>http://qiaosu.gitee.io/others/card-info/</link>
+      <link>https://exiarepairii.github.io/blog/others/card-info/</link>
       <pubDate>Fri, 06 Aug 2021 17:45:18 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/others/card-info/</guid>
+      <guid>https://exiarepairii.github.io/blog/others/card-info/</guid>
       <description>权益  任意饮品抵扣券（3次/日） 其他   余额：3元
  </description>
     </item>

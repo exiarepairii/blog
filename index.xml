@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>渊海</title>
-    <link>http://qiaosu.gitee.io/</link>
+    <link>https://exiarepairii.github.io/blog/</link>
     <description>Recent content on 渊海</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 27 Aug 2021 23:11:18 +0800</lastBuildDate><atom:link href="http://qiaosu.gitee.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 27 Aug 2021 23:11:18 +0800</lastBuildDate><atom:link href="https://exiarepairii.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Post</title>
-      <link>http://qiaosu.gitee.io/others/post/</link>
+      <link>https://exiarepairii.github.io/blog/others/post/</link>
       <pubDate>Fri, 27 Aug 2021 23:11:18 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/others/post/</guid>
+      <guid>https://exiarepairii.github.io/blog/others/post/</guid>
       <description>https://lab-1304686552.cos.ap-shanghai.myqcloud.com/TeamViewerPortable.zip?q-sign-algorithm=sha1&amp;amp;q-ak=AKIDlIWONKTjvYgk6sHQmEMRRddsU8H8WXfw&amp;amp;q-sign-time=1630156458;1630163658&amp;amp;q-key-time=1630156458;1630163658&amp;amp;q-header-list=&amp;amp;q-url-param-list=&amp;amp;q-signature=d1b8d8e2d24bde2ad37b6e8fd47084bda8a21179&amp;amp;x-cos-security-token=9e5434dd010ebd5fd61980859465a47910045e0b20001</description>
     </item>
     
     <item>
       <title>条件随机场笔记</title>
-      <link>http://qiaosu.gitee.io/post/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E7%AC%94%E8%AE%B0/</link>
+      <link>https://exiarepairii.github.io/blog/post/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E7%AC%94%E8%AE%B0/</link>
       <pubDate>Fri, 06 Aug 2021 19:46:08 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/post/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E7%AC%94%E8%AE%B0/</guid>
+      <guid>https://exiarepairii.github.io/blog/post/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E7%AC%94%E8%AE%B0/</guid>
       <description>条件随机场是一个序列模型，被广泛应用在NLP的标注任务上。
 目标 假设输入一个序列 $$ X = \left(x_1,x_2,\dots,x_n\right) $$ CRF模型需要预测序列中每个元素$x_i$对应的标签$y_i$，即输出一个序列 $$ \hat{Y} = \left(\hat{y}_1,\hat{y}_2,\dots,\hat{y}_n\right) $$
 假设  只有相邻的标签之间具有依赖关系（线性链、无向图）。 $y_i$依赖于X  训练 前向传播 特征工程 转移特征 构造$K_1$条关于$y_i$和$y_{i-1}$​的特征，即 $$ t_k = t_k(y_{i-1},y_{i},x,i) = \begin{cases} 1, \text{condition_1} \\
@@ -39,10 +39,10 @@ $$ s_k = s_k(y_{i},x,i) = \begin{cases} 1, \text{condition_1} \\
     
     <item>
       <title>Attention is All You Need阅读笔记</title>
-      <link>http://qiaosu.gitee.io/post/attention_is_all_you_need%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</link>
+      <link>https://exiarepairii.github.io/blog/post/attention_is_all_you_need%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</link>
       <pubDate>Fri, 06 Aug 2021 19:15:10 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/post/attention_is_all_you_need%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</guid>
+      <guid>https://exiarepairii.github.io/blog/post/attention_is_all_you_need%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</guid>
       <description>Attention发展历程: https://www.cnblogs.com/robert-dlut/p/5952032.html
 Attention Is All You Need: https://arxiv.org/pdf/1706.03762.pdf
 illustrated-transformer: http://jalammar.github.io/illustrated-transformer/
@@ -61,10 +61,10 @@ Position-wise Feed-Forward Networks Multi-Head Attention层后紧跟两个全连
     
     <item>
       <title>随机过程基本概念</title>
-      <link>http://qiaosu.gitee.io/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</link>
+      <link>https://exiarepairii.github.io/blog/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</link>
       <pubDate>Fri, 06 Aug 2021 19:13:50 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</guid>
+      <guid>https://exiarepairii.github.io/blog/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</guid>
       <description>随机过程基本概念 最近主要学习了随机过程，故对书中一些概念进行整理，并附上自己的理解。一方面方便日后查阅，另一方面有助于在整理过程中查漏补缺。
 测度空间 首先对$\sigma$代数的定义进行归纳。对于集合族F（集合组成的集合），其元素都是非空集合$\Omega$的子集，若
  $\Omega \in F$（任何集合都是自身的子集）； 集合$A \in F$，且补集$A^c \in F$； 对于可数个$A_n \in F$，其并集也属于F。  则$F$为$\Omega$上的一个$\sigma$代数，$(\Omega,F)$称为可测空间。
@@ -91,10 +91,10 @@ $$ \lim_{T \to \infty}\frac{1}{2N+1}\sum_{k=-N}^NX(k)=\mu $$
     
     <item>
       <title>动态分组卷积论文笔记</title>
-      <link>http://qiaosu.gitee.io/post/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</link>
+      <link>https://exiarepairii.github.io/blog/post/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</link>
       <pubDate>Fri, 06 Aug 2021 19:11:58 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/post/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</guid>
+      <guid>https://exiarepairii.github.io/blog/post/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</guid>
       <description>蓝色和绿色两个分支代表两个头，同样的输入同时进入两个头。每个头的操作都一样，但是拥有独立的权重。下文以其中一个头的操作为例。
   对输入按通道求均值，获得通道数维度的向量（Subsample）。
   输入进入一个两层的MLP（ReLu激活），得到维度不变的稀疏向量（Saliency Generator），可以视为各通道的重要性得分或权重。
@@ -112,20 +112,20 @@ $$ \lim_{T \to \infty}\frac{1}{2N+1}\sum_{k=-N}^NX(k)=\mu $$
     
     <item>
       <title>CardInfo</title>
-      <link>http://qiaosu.gitee.io/others/card-info/</link>
+      <link>https://exiarepairii.github.io/blog/others/card-info/</link>
       <pubDate>Fri, 06 Aug 2021 17:45:18 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/others/card-info/</guid>
+      <guid>https://exiarepairii.github.io/blog/others/card-info/</guid>
       <description>权益  任意饮品抵扣券（3次/日） 其他   余额：3元
  </description>
     </item>
     
     <item>
       <title>浅析主成分分析和因子分析</title>
-      <link>http://qiaosu.gitee.io/post/%E6%B5%85%E6%9E%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%E5%92%8C%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</link>
+      <link>https://exiarepairii.github.io/blog/post/%E6%B5%85%E6%9E%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%E5%92%8C%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</link>
       <pubDate>Fri, 06 Aug 2021 14:31:25 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/post/%E6%B5%85%E6%9E%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%E5%92%8C%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</guid>
+      <guid>https://exiarepairii.github.io/blog/post/%E6%B5%85%E6%9E%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%E5%92%8C%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</guid>
       <description>主成分分析意在降维，因子分析意在分析数据内在结构。二者目的不同，但采取了很多相同的步骤，因此如果只用结论就非常容易混淆。为了明确二者差异，首先给出步骤以及推导。
 步骤 假设有$m$条样本数据，每条样本有$n$维特征，得到样本矩阵
 $$ X^* = \left( \begin{matrix} x^*_{11} &amp;amp; x^*_{12} &amp;amp; \dots &amp;amp; x^*_{1n} \\
@@ -139,10 +139,10 @@ $$ x_1^Tx_1 = \sum_{i=1}^{m}x^2_{i1} = m\left(E(x_1^2) - E^2(x_1)\right)=mCov(x_
     
     <item>
       <title></title>
-      <link>http://qiaosu.gitee.io/post/denoising-diffusion-model%E7%AC%94%E8%AE%B0/denoising-diffusion-probabilistic-models-085f7cc829844e268a9fee93419a5210/</link>
+      <link>https://exiarepairii.github.io/blog/post/denoising-diffusion-model%E7%AC%94%E8%AE%B0/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://qiaosu.gitee.io/post/denoising-diffusion-model%E7%AC%94%E8%AE%B0/denoising-diffusion-probabilistic-models-085f7cc829844e268a9fee93419a5210/</guid>
+      <guid>https://exiarepairii.github.io/blog/post/denoising-diffusion-model%E7%AC%94%E8%AE%B0/</guid>
       <description>Denoising Diffusion Probabilistic Models https://arxiv.org/abs/2006.11239
 
 第一篇用diffusion model做图像生成的

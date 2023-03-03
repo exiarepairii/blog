@@ -2,116 +2,116 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on 渊海</title>
-    <link>http://qiaosu.gitee.io/tags/</link>
+    <link>https://exiarepairii.github.io/blog/tags/</link>
     <description>Recent content in Tags on 渊海</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 06 Aug 2021 19:46:08 +0800</lastBuildDate><atom:link href="http://qiaosu.gitee.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Aug 2021 19:46:08 +0800</lastBuildDate><atom:link href="https://exiarepairii.github.io/blog/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CRF</title>
-      <link>http://qiaosu.gitee.io/tags/crf/</link>
+      <link>https://exiarepairii.github.io/blog/tags/crf/</link>
       <pubDate>Fri, 06 Aug 2021 19:46:08 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/tags/crf/</guid>
+      <guid>https://exiarepairii.github.io/blog/tags/crf/</guid>
       <description></description>
     </item>
     
     <item>
       <title>机器学习</title>
-      <link>http://qiaosu.gitee.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
+      <link>https://exiarepairii.github.io/blog/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
       <pubDate>Fri, 06 Aug 2021 19:46:08 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</guid>
+      <guid>https://exiarepairii.github.io/blog/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</guid>
       <description></description>
     </item>
     
     <item>
       <title>条件随机场</title>
-      <link>http://qiaosu.gitee.io/tags/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA/</link>
+      <link>https://exiarepairii.github.io/blog/tags/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA/</link>
       <pubDate>Fri, 06 Aug 2021 19:46:08 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/tags/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA/</guid>
+      <guid>https://exiarepairii.github.io/blog/tags/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA/</guid>
       <description></description>
     </item>
     
     <item>
       <title>经典算法</title>
-      <link>http://qiaosu.gitee.io/tags/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/</link>
+      <link>https://exiarepairii.github.io/blog/tags/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/</link>
       <pubDate>Fri, 06 Aug 2021 19:46:08 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/tags/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/</guid>
+      <guid>https://exiarepairii.github.io/blog/tags/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Transformer</title>
-      <link>http://qiaosu.gitee.io/tags/transformer/</link>
+      <link>https://exiarepairii.github.io/blog/tags/transformer/</link>
       <pubDate>Fri, 06 Aug 2021 19:15:10 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/tags/transformer/</guid>
+      <guid>https://exiarepairii.github.io/blog/tags/transformer/</guid>
       <description></description>
     </item>
     
     <item>
       <title>深度学习</title>
-      <link>http://qiaosu.gitee.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</link>
+      <link>https://exiarepairii.github.io/blog/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</link>
       <pubDate>Fri, 06 Aug 2021 19:15:10 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</guid>
+      <guid>https://exiarepairii.github.io/blog/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</guid>
       <description></description>
     </item>
     
     <item>
       <title>论文笔记</title>
-      <link>http://qiaosu.gitee.io/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</link>
+      <link>https://exiarepairii.github.io/blog/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</link>
       <pubDate>Fri, 06 Aug 2021 19:15:10 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</guid>
+      <guid>https://exiarepairii.github.io/blog/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</guid>
       <description></description>
     </item>
     
     <item>
       <title>随机过程</title>
-      <link>http://qiaosu.gitee.io/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/</link>
+      <link>https://exiarepairii.github.io/blog/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/</link>
       <pubDate>Fri, 06 Aug 2021 19:13:50 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/</guid>
+      <guid>https://exiarepairii.github.io/blog/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/</guid>
       <description></description>
     </item>
     
     <item>
       <title>DGC</title>
-      <link>http://qiaosu.gitee.io/tags/dgc/</link>
+      <link>https://exiarepairii.github.io/blog/tags/dgc/</link>
       <pubDate>Fri, 06 Aug 2021 19:11:58 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/tags/dgc/</guid>
+      <guid>https://exiarepairii.github.io/blog/tags/dgc/</guid>
       <description></description>
     </item>
     
     <item>
       <title>动态分组卷积</title>
-      <link>http://qiaosu.gitee.io/tags/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF/</link>
+      <link>https://exiarepairii.github.io/blog/tags/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF/</link>
       <pubDate>Fri, 06 Aug 2021 19:11:58 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/tags/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF/</guid>
+      <guid>https://exiarepairii.github.io/blog/tags/%E5%8A%A8%E6%80%81%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF/</guid>
       <description></description>
     </item>
     
     <item>
       <title>主成分</title>
-      <link>http://qiaosu.gitee.io/tags/%E4%B8%BB%E6%88%90%E5%88%86/</link>
+      <link>https://exiarepairii.github.io/blog/tags/%E4%B8%BB%E6%88%90%E5%88%86/</link>
       <pubDate>Fri, 06 Aug 2021 14:31:25 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/tags/%E4%B8%BB%E6%88%90%E5%88%86/</guid>
+      <guid>https://exiarepairii.github.io/blog/tags/%E4%B8%BB%E6%88%90%E5%88%86/</guid>
       <description></description>
     </item>
     
     <item>
       <title>因子分析</title>
-      <link>http://qiaosu.gitee.io/tags/%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</link>
+      <link>https://exiarepairii.github.io/blog/tags/%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</link>
       <pubDate>Fri, 06 Aug 2021 14:31:25 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/tags/%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</guid>
+      <guid>https://exiarepairii.github.io/blog/tags/%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</guid>
       <description></description>
     </item>
     

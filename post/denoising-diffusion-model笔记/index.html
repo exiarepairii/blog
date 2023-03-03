@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>渊海</title>
+<meta name="keywords" content="" />
+<meta name="description" content="Denoising Diffusion Probabilistic Models https://arxiv.org/abs/2006.11239
+
+第一篇用diffusion model做图像生成的
+ Diffusion models are straightforward to define and efficient to train, but to the best of our knowledge, there has been no demonstration that they are capable of generating high quality samples.
+ 背景 逆向过程 由标准高斯噪声$x_T$转移到原始输入$x_0$的马尔可夫链。定义
+此处$p_{\theta}(x_{0:T})=p_{\theta}(x_0,x_1,\dots,x_T)$，对$x_{1:T}$积分可得原始输入$x_0$的边缘分布
+$$ p_{\theta}(x_0) = \int p_{\theta}(x_{0:T})dx_{1:T} $$
+每一步的转移概率服从高斯分布，其均值和方差由前一个状态计算得到。
+前向（扩散）过程 由原始输入$x_0$逐渐加噪声，得到各向独立的高斯噪声$x_T\sim N(x_T;0,I)$，也是一个马尔可夫过程
+转移概率由超参$\beta_t$和前一个状态$x_{t-1}$共同决定。看起来$\beta_t \in [0,1]$，而且方差越大均值约小，这个有什么深意？
+前向过程中任意时刻的条件概率都可以写作
+$$ q(x_t|x_0) = N(x_t;\sqrt{\overline{\alpha}_t}x_0,(1-\overline{\alpha}_t)I); \quad \text{where} \quad\alpha_t := 1-\beta_t ,\quad \overline{\alpha}t := \prod{s=1}^t \alpha_s $$">
+<meta name="author" content="">
+<link rel="canonical" href="https://exiarepairii.github.io/blog/post/denoising-diffusion-model%E7%AC%94%E8%AE%B0/" />
+<link crossorigin="anonymous" href="/blog/assets/css/stylesheet.min.6cba0d81b5f3f42bb578d49f402ba4175aa72b43def148780b8ad714c957c6f5.css" integrity="sha256-bLoNgbXz9Cu1eNSfQCukF1qnK0Pe8Uh4C4rXFMlXxvU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/blog/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js" integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5&#43;kdJvBz5iKbt6B5PJI="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://exiarepairii.github.io/blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://exiarepairii.github.io/blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://exiarepairii.github.io/blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://exiarepairii.github.io/blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://exiarepairii.github.io/blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.87.0" />
+<meta property="og:title" content="" />
+<meta property="og:description" content="Denoising Diffusion Probabilistic Models https://arxiv.org/abs/2006.11239
+
+第一篇用diffusion model做图像生成的
+ Diffusion models are straightforward to define and efficient to train, but to the best of our knowledge, there has been no demonstration that they are capable of generating high quality samples.
+ 背景 逆向过程 由标准高斯噪声$x_T$转移到原始输入$x_0$的马尔可夫链。定义
+此处$p_{\theta}(x_{0:T})=p_{\theta}(x_0,x_1,\dots,x_T)$，对$x_{1:T}$积分可得原始输入$x_0$的边缘分布
+$$ p_{\theta}(x_0) = \int p_{\theta}(x_{0:T})dx_{1:T} $$
+每一步的转移概率服从高斯分布，其均值和方差由前一个状态计算得到。
+前向（扩散）过程 由原始输入$x_0$逐渐加噪声，得到各向独立的高斯噪声$x_T\sim N(x_T;0,I)$，也是一个马尔可夫过程
+转移概率由超参$\beta_t$和前一个状态$x_{t-1}$共同决定。看起来$\beta_t \in [0,1]$，而且方差越大均值约小，这个有什么深意？
+前向过程中任意时刻的条件概率都可以写作
+$$ q(x_t|x_0) = N(x_t;\sqrt{\overline{\alpha}_t}x_0,(1-\overline{\alpha}_t)I); \quad \text{where} \quad\alpha_t := 1-\beta_t ,\quad \overline{\alpha}t := \prod{s=1}^t \alpha_s $$" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://exiarepairii.github.io/blog/post/denoising-diffusion-model%E7%AC%94%E8%AE%B0/" /><meta property="article:section" content="post" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="Denoising Diffusion Probabilistic Models https://arxiv.org/abs/2006.11239
+
+第一篇用diffusion model做图像生成的
+ Diffusion models are straightforward to define and efficient to train, but to the best of our knowledge, there has been no demonstration that they are capable of generating high quality samples.
+ 背景 逆向过程 由标准高斯噪声$x_T$转移到原始输入$x_0$的马尔可夫链。定义
+此处$p_{\theta}(x_{0:T})=p_{\theta}(x_0,x_1,\dots,x_T)$，对$x_{1:T}$积分可得原始输入$x_0$的边缘分布
+$$ p_{\theta}(x_0) = \int p_{\theta}(x_{0:T})dx_{1:T} $$
+每一步的转移概率服从高斯分布，其均值和方差由前一个状态计算得到。
+前向（扩散）过程 由原始输入$x_0$逐渐加噪声，得到各向独立的高斯噪声$x_T\sim N(x_T;0,I)$，也是一个马尔可夫过程
+转移概率由超参$\beta_t$和前一个状态$x_{t-1}$共同决定。看起来$\beta_t \in [0,1]$，而且方差越大均值约小，这个有什么深意？
+前向过程中任意时刻的条件概率都可以写作
+$$ q(x_t|x_0) = N(x_t;\sqrt{\overline{\alpha}_t}x_0,(1-\overline{\alpha}_t)I); \quad \text{where} \quad\alpha_t := 1-\beta_t ,\quad \overline{\alpha}t := \prod{s=1}^t \alpha_s $$"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://exiarepairii.github.io/blog/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "",
+      "item": "https://exiarepairii.github.io/blog/post/denoising-diffusion-model%E7%AC%94%E8%AE%B0/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "",
+  "name": "",
+  "description": "Denoising Diffusion Probabilistic Models https://arxiv.org/abs/2006.11239\n\n第一篇用diffusion model做图像生成的\n Diffusion models are straightforward to define and efficient to train, but to the best of our knowledge, there has been no demonstration that they are capable of generating high quality samples.\n 背景 逆向过程 由标准高斯噪声$x_T$转移到原始输入$x_0$的马尔可夫链。定义\n此处$p_{\\theta}(x_{0:T})=p_{\\theta}(x_0,x_1,\\dots,x_T)$，对$x_{1:T}$积分可得原始输入$x_0$的边缘分布\n$$ p_{\\theta}(x_0) = \\int p_{\\theta}(x_{0:T})dx_{1:T} $$\n每一步的转移概率服从高斯分布，其均值和方差由前一个状态计算得到。\n前向（扩散）过程 由原始输入$x_0$逐渐加噪声，得到各向独立的高斯噪声$x_T\\sim N(x_T;0,I)$，也是一个马尔可夫过程\n转移概率由超参$\\beta_t$和前一个状态$x_{t-1}$共同决定。看起来$\\beta_t \\in [0,1]$，而且方差越大均值约小，这个有什么深意？\n前向过程中任意时刻的条件概率都可以写作\n$$ q(x_t|x_0) = N(x_t;\\sqrt{\\overline{\\alpha}_t}x_0,(1-\\overline{\\alpha}_t)I); \\quad \\text{where} \\quad\\alpha_t := 1-\\beta_t ,\\quad \\overline{\\alpha}t := \\prod{s=1}^t \\alpha_s $$",
+  "keywords": [
+    
+  ],
+  "articleBody": "Denoising Diffusion Probabilistic Models https://arxiv.org/abs/2006.11239\n\n第一篇用diffusion model做图像生成的\n Diffusion models are straightforward to define and efficient to train, but to the best of our knowledge, there has been no demonstration that they are capable of generating high quality samples.\n 背景 逆向过程 由标准高斯噪声$x_T$转移到原始输入$x_0$的马尔可夫链。定义\n此处$p_{\\theta}(x_{0:T})=p_{\\theta}(x_0,x_1,\\dots,x_T)$，对$x_{1:T}$积分可得原始输入$x_0$的边缘分布\n$$ p_{\\theta}(x_0) = \\int p_{\\theta}(x_{0:T})dx_{1:T} $$\n每一步的转移概率服从高斯分布，其均值和方差由前一个状态计算得到。\n前向（扩散）过程 由原始输入$x_0$逐渐加噪声，得到各向独立的高斯噪声$x_T\\sim N(x_T;0,I)$，也是一个马尔可夫过程\n转移概率由超参$\\beta_t$和前一个状态$x_{t-1}$共同决定。看起来$\\beta_t \\in [0,1]$，而且方差越大均值约小，这个有什么深意？\n前向过程中任意时刻的条件概率都可以写作\n$$ q(x_t|x_0) = N(x_t;\\sqrt{\\overline{\\alpha}_t}x_0,(1-\\overline{\\alpha}_t)I); \\quad \\text{where} \\quad\\alpha_t := 1-\\beta_t ,\\quad \\overline{\\alpha}t := \\prod{s=1}^t \\alpha_s $$\n训练目标 最小化NLL的上界\n由詹森不等式https://en.wikipedia.org/wiki/Jensen’s_inequality\n$$ \\begin{aligned} -\\log p_{\\theta}(x_0) \u0026=-\\log\\int q(x_{1:T}|x_0)\\frac{p_{\\theta}(x_{0:T}|x_{1:T})p_{\\theta}(x_{1:T})}{q(x_{1:T}|x_0)}dx_{1:T} \\ \u0026= -\\log E_q(\\frac{p_{\\theta}(x_{0:T})}{q(x_{1:T}|x_0)})\\ \u0026\\le E_q(-\\log \\frac{p_{\\theta}(x_{0:T})}{q(x_{1:T}|x_0)}) \\ \u0026=E_q(-\\log \\frac{p(x_T)\\prod_{t=1}^{T}p_{\\theta}(x_{t-1}|x_{t})}{\\prod_{t=1}^{T}q(x_t|x_{t-1})}) \\ \u0026= E_q(-\\log p(x_T) - \\sum_{t\\ge 1} \\log \\frac{p_{\\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1})})=:L \\ \u0026=E_q(-\\log p(x_T) - \\sum_{t 1} \\log \\frac{p_{\\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1})} - \\log \\frac{p_{\\theta}(x_{0}|x_1)}{q(x_1|x_{0})}) \\ \\end{aligned} $$\n又\n$$ \\begin{aligned} q(x_t|x_{t-1}) \u0026= q(x_t|x_{t-1},x_0) \\\u0026=\\frac{q(x_{t-1}|x_t,x_0)q(x_t,x_0)}{q(x_{t-1},x_0)} \\ \u0026= q(x_{t-1}|x_t,x_0) \\frac{q(x_t|x_0)}{q(x_{t-1}|x_0)}\\end{aligned} $$\n因此\n$$ \\begin{aligned} L \u0026=E_q(-\\log p(x_T) - \\sum_{t 1} \\log \\frac{p_{\\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)}\\cdot \\frac{q(x_{t-1}|x_0)}{q(x_{t}|x_0)} - \\log \\frac{p_{\\theta}(x_{0}|x_1)}{q(x_1|x_{0})}) \\end{aligned} $$\n其中\n$$ \\begin{aligned} \\sum_{t 1} \\log \\frac{p_{\\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)}\\cdot \\frac{q(x_{t-1}|x_0)}{q(x_{t}|x_0)} \u0026= \\sum_{t 1} \\log \\frac{p_{\\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)} + \\sum_{t 1} \\log \\frac{q(x_{t-1}|x_0)}{q(x_{t}|x_0)} \\\u0026= \\sum_{t 1} \\log \\frac{p_{\\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)} + \\log \\frac{q(x_{1}|x_0)}{q(x_{T}|x_0)}\\end{aligned} $$\n得到\n$$ \\begin{aligned} L \u0026=E_q(-\\log p(x_T) - \\sum_{t 1} \\log \\frac{p_{\\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)} - \\log \\frac{q(x_{1}|x_0)}{q(x_{T}|x_0)} - \\log \\frac{p_{\\theta}(x_{0}|x_1)}{q(x_1|x_{0})}) \\\u0026= E_q(-\\log \\frac{p(x_T)}{q(x_T|x_0)} - \\sum_{t 1} \\log \\frac{p_{\\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)} - \\log p_{\\theta}(x_{0}|x_1))\\end{aligned} $$\n用KL散度重写成\n训练内容 前向过程（2）式中的超参$\\beta_t$、模型架构、反向过程的高斯分布参数（均值、方差）\n前向过程 把$\\beta_t$作为固定的超参数，相当于前向过程分布没有需要学习的参数了。\nloss里的$L_T$就是常数了（$p(x_T)$是标准正态）\n逆向过程 设$p_{\\theta}(x_{t-1}|x_t)$的方差$\\Sigma_{\\theta}(x_t,t)=\\sigma_t^2I$，即一个时间相关的无需训练的常量。\n由高斯分布KL散度推导，得到\n$$ L_{t-1} = E_q(\\frac{1}{2\\sigma_t^2}||\\widetilde{\\mu_t}(x_t,x_0)- \\mu_{\\theta}(x_t,t)||^2) + C $$\n所以最直接的建模就是找到一组参数$\\theta$使得$\\mu_{\\theta}(x_t,t)$接近$\\widetilde{\\mu_t}(x_t,x_0)$。\n因为前向过程是从$x_0$逐渐扩散成$x_T$，其中每一步的转移概率分布都取决于前一次的转移概率分布，相当于是每一步的转移概率分布都和初始分布有关。可以把前向过程里的$x_t$扩写成$x_t(x_0,\\epsilon) = \\sqrt{\\overline{\\alpha}_t}x_0+\\sqrt{1-\\overline{\\alpha}_t}\\epsilon$，其中$\\epsilon \\sim N(0,I)$，代入上式\nEq(10)推导见（https://blog.csdn.net/qq_40714949/article/details/126643111）\n由Eq(9)，可以选择参数化$\\mu_{\\theta}(x_t,t)$如下\n至此，$L_{t-1}$只剩下噪声$\\epsilon$未知，建模$\\epsilon_{\\theta}$，根据输入$x_t$和加噪步数$t$预测噪声$\\epsilon$。\n推理：\n 要采样$x_{t-1} \\sim p_{\\theta}(x_{t-1}|x_t)$，根据Eq(1)，就是要确定正态分布的均值$\\mu_{\\theta}(x_t,t)$和方差$\\Sigma_{\\theta}(x_t,t)$ 本节开头假设方差为某固定常数，只需要依Eq(11)计算均值就可以得到分布估计。 求的分布后，随机采样就得到了去噪图像$x_{t-1}$ t-=1，回到step1  ",
+  "wordCount" : "231",
+  "inLanguage": "en",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://exiarepairii.github.io/blog/post/denoising-diffusion-model%E7%AC%94%E8%AE%B0/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "渊海",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://exiarepairii.github.io/blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: #1d1e20;
+                --entry: #2e2e33;
+                --primary: rgba(255, 255, 255, 0.84);
+                --secondary: rgba(255, 255, 255, 0.56);
+                --tertiary: rgba(255, 255, 255, 0.16);
+                --content: rgba(255, 255, 255, 0.74);
+                --hljs-bg: #2e2e33;
+                --code-bg: #37383e;
+                --border: #333;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://exiarepairii.github.io/blog/" accesskey="h" title="渊海 (Alt + H)">渊海</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://exiarepairii.github.io/blog/archives" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://exiarepairii.github.io/blog/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://exiarepairii.github.io/blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://exiarepairii.github.io/blog/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      
+    </h1>
+    <div class="post-meta">
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <div class="details">Table of Contents</div>
+        </summary>
+        <div class="inner"><ul>
+                <li>
+                    <a href="#denoising-diffusion-probabilistic-models" aria-label="Denoising Diffusion Probabilistic Models">Denoising Diffusion Probabilistic Models</a></li>
+                <li>
+                    <a href="#%e8%83%8c%e6%99%af" aria-label="背景">背景</a><ul>
+                        
+                <li>
+                    <a href="#%e9%80%86%e5%90%91%e8%bf%87%e7%a8%8b" aria-label="逆向过程">逆向过程</a></li>
+                <li>
+                    <a href="#%e5%89%8d%e5%90%91%e6%89%a9%e6%95%a3%e8%bf%87%e7%a8%8b" aria-label="前向（扩散）过程">前向（扩散）过程</a></li>
+                <li>
+                    <a href="#%e8%ae%ad%e7%bb%83%e7%9b%ae%e6%a0%87" aria-label="训练目标">训练目标</a></li>
+                <li>
+                    <a href="#%e8%ae%ad%e7%bb%83%e5%86%85%e5%ae%b9" aria-label="训练内容">训练内容</a><ul>
+                        
+                <li>
+                    <a href="#%e5%89%8d%e5%90%91%e8%bf%87%e7%a8%8b" aria-label="前向过程">前向过程</a></li>
+                <li>
+                    <a href="#%e9%80%86%e5%90%91%e8%bf%87%e7%a8%8b-1" aria-label="逆向过程">逆向过程</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models<a hidden class="anchor" aria-hidden="true" href="#denoising-diffusion-probabilistic-models">#</a></h1>
+<p><a href="https://arxiv.org/abs/2006.11239">https://arxiv.org/abs/2006.11239</a></p>
+<p><a href="https://i0.hdslb.com/bfs/new_dyn/a180978fc2337febe001ab17001a6a27373596439.jpg@1036w_!web-dynamic.webp"></a></p>
+<p>第一篇用diffusion model做图像生成的</p>
+<blockquote>
+<p>Diffusion models are straightforward to define and efficient to train, but to the best of our knowledge, there has been no demonstration that they are capable of generating high quality samples.</p>
+</blockquote>
+<h1 id="背景">背景<a hidden class="anchor" aria-hidden="true" href="#背景">#</a></h1>
+<h2 id="逆向过程">逆向过程<a hidden class="anchor" aria-hidden="true" href="#逆向过程">#</a></h2>
+<p>由标准高斯噪声$x_T$转移到原始输入$x_0$的马尔可夫链。定义</p>
+<p><img loading="lazy" src="Denoising%20Diffusion%20Probabilistic%20Models%20085f7cc829844e268a9fee93419a5210/Untitled.png" alt="Untitled"  />
+</p>
+<p>此处$p_{\theta}(x_{0:T})=p_{\theta}(x_0,x_1,\dots,x_T)$，对$x_{1:T}$积分可得原始输入$x_0$的边缘分布</p>
+<p>$$
+p_{\theta}(x_0) = \int p_{\theta}(x_{0:T})dx_{1:T}
+$$</p>
+<p>每一步的转移概率服从高斯分布，其均值和方差由前一个状态计算得到。</p>
+<h2 id="前向扩散过程">前向（扩散）过程<a hidden class="anchor" aria-hidden="true" href="#前向扩散过程">#</a></h2>
+<p>由原始输入$x_0$逐渐加噪声，得到各向独立的高斯噪声$x_T\sim N(x_T;0,I)$，也是一个马尔可夫过程</p>
+<p><img loading="lazy" src="Denoising%20Diffusion%20Probabilistic%20Models%20085f7cc829844e268a9fee93419a5210/Untitled%201.png" alt="Untitled"  />
+</p>
+<p>转移概率由超参$\beta_t$和前一个状态$x_{t-1}$共同决定。看起来$\beta_t \in [0,1]$，而且方差越大均值约小，这个有什么深意？</p>
+<p>前向过程中任意时刻的条件概率都可以写作</p>
+<p>$$
+q(x_t|x_0) = N(x_t;\sqrt{\overline{\alpha}_t}x_0,(1-\overline{\alpha}_t)I); \quad \text{where} \quad\alpha_t := 1-\beta_t ,\quad \overline{\alpha}<em>t := \prod</em>{s=1}^t \alpha_s
+$$</p>
+<h2 id="训练目标">训练目标<a hidden class="anchor" aria-hidden="true" href="#训练目标">#</a></h2>
+<p><strong>最小化NLL的上界</strong></p>
+<p>由詹森不等式<a href="https://en.wikipedia.org/wiki/Jensen%27s_inequality">https://en.wikipedia.org/wiki/Jensen&rsquo;s_inequality</a></p>
+<p>$$
+\begin{aligned} -\log p_{\theta}(x_0) &amp;=-\log\int q(x_{1:T}|x_0)\frac{p_{\theta}(x_{0:T}|x_{1:T})p_{\theta}(x_{1:T})}{q(x_{1:T}|x_0)}dx_{1:T} \ &amp;= -\log E_q(\frac{p_{\theta}(x_{0:T})}{q(x_{1:T}|x_0)})\ &amp;\le E_q(-\log \frac{p_{\theta}(x_{0:T})}{q(x_{1:T}|x_0)}) \ &amp;=E_q(-\log \frac{p(x_T)\prod_{t=1}^{T}p_{\theta}(x_{t-1}|x_{t})}{\prod_{t=1}^{T}q(x_t|x_{t-1})}) \ &amp;= E_q(-\log p(x_T) - \sum_{t\ge 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1})})=:L \ &amp;=E_q(-\log p(x_T) - \sum_{t&gt; 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1})} - \log \frac{p_{\theta}(x_{0}|x_1)}{q(x_1|x_{0})}) \ \end{aligned}
+$$</p>
+<p>又</p>
+<p>$$
+\begin{aligned} q(x_t|x_{t-1}) &amp;= q(x_t|x_{t-1},x_0) \&amp;=\frac{q(x_{t-1}|x_t,x_0)q(x_t,x_0)}{q(x_{t-1},x_0)} \ &amp;= q(x_{t-1}|x_t,x_0) \frac{q(x_t|x_0)}{q(x_{t-1}|x_0)}\end{aligned}
+$$</p>
+<p>因此</p>
+<p>$$
+\begin{aligned} L &amp;=E_q(-\log p(x_T) - \sum_{t&gt; 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)}\cdot \frac{q(x_{t-1}|x_0)}{q(x_{t}|x_0)} - \log \frac{p_{\theta}(x_{0}|x_1)}{q(x_1|x_{0})}) \end{aligned}
+$$</p>
+<p>其中</p>
+<p>$$
+\begin{aligned} \sum_{t&gt; 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)}\cdot \frac{q(x_{t-1}|x_0)}{q(x_{t}|x_0)} &amp;= \sum_{t&gt; 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)} + \sum_{t&gt; 1} \log \frac{q(x_{t-1}|x_0)}{q(x_{t}|x_0)} \&amp;= \sum_{t&gt; 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)} + \log \frac{q(x_{1}|x_0)}{q(x_{T}|x_0)}\end{aligned}
+$$</p>
+<p>得到</p>
+<p>$$
+\begin{aligned} L &amp;=E_q(-\log p(x_T) - \sum_{t&gt; 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)} - \log \frac{q(x_{1}|x_0)}{q(x_{T}|x_0)} - \log \frac{p_{\theta}(x_{0}|x_1)}{q(x_1|x_{0})}) \&amp;= E_q(-\log \frac{p(x_T)}{q(x_T|x_0)} - \sum_{t&gt; 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)} - \log p_{\theta}(x_{0}|x_1))\end{aligned}
+$$</p>
+<p>用KL散度重写成</p>
+<p><img loading="lazy" src="Denoising%20Diffusion%20Probabilistic%20Models%20085f7cc829844e268a9fee93419a5210/Untitled%202.png" alt="Untitled"  />
+</p>
+<h2 id="训练内容">训练内容<a hidden class="anchor" aria-hidden="true" href="#训练内容">#</a></h2>
+<p>前向过程（2）式中的超参$\beta_t$、模型架构、反向过程的高斯分布参数（均值、方差）</p>
+<h3 id="前向过程">前向过程<a hidden class="anchor" aria-hidden="true" href="#前向过程">#</a></h3>
+<p>把$\beta_t$作为固定的超参数，相当于前向过程分布没有需要学习的参数了。</p>
+<p>loss里的$L_T$就是常数了（$p(x_T)$是标准正态）</p>
+<h3 id="逆向过程-1">逆向过程<a hidden class="anchor" aria-hidden="true" href="#逆向过程-1">#</a></h3>
+<p>设$p_{\theta}(x_{t-1}|x_t)$的方差$\Sigma_{\theta}(x_t,t)=\sigma_t^2I$，即一个时间相关的无需训练的常量。</p>
+<p>由<a href="https://zhuanlan.zhihu.com/p/55778595">高斯分布KL散度推导</a>，得到</p>
+<p>$$
+L_{t-1} = E_q(\frac{1}{2\sigma_t^2}||\widetilde{\mu_t}(x_t,x_0)- \mu_{\theta}(x_t,t)||^2) + C
+$$</p>
+<p>所以最直接的建模就是找到一组参数$\theta$使得$\mu_{\theta}(x_t,t)$接近$\widetilde{\mu_t}(x_t,x_0)$。</p>
+<p>因为前向过程是从$x_0$逐渐扩散成$x_T$，其中每一步的转移概率分布都取决于前一次的转移概率分布，相当于是每一步的转移概率分布都和初始分布有关。可以把前向过程里的$x_t$扩写成$x_t(x_0,\epsilon) = \sqrt{\overline{\alpha}_t}x_0+\sqrt{1-\overline{\alpha}_t}\epsilon$，其中$\epsilon \sim N(0,I)$，代入上式</p>
+<p><img loading="lazy" src="Denoising%20Diffusion%20Probabilistic%20Models%20085f7cc829844e268a9fee93419a5210/Untitled%203.png" alt="Untitled"  />
+</p>
+<p>Eq(10)推导见（<a href="https://blog.csdn.net/qq_40714949/article/details/126643111">https://blog.csdn.net/qq_40714949/article/details/126643111</a>）</p>
+<p><img loading="lazy" src="Denoising%20Diffusion%20Probabilistic%20Models%20085f7cc829844e268a9fee93419a5210/Untitled%204.png" alt="Untitled"  />
+</p>
+<p>由Eq(9)，可以选择参数化$\mu_{\theta}(x_t,t)$如下</p>
+<p><img loading="lazy" src="Denoising%20Diffusion%20Probabilistic%20Models%20085f7cc829844e268a9fee93419a5210/Untitled%205.png" alt="Untitled"  />
+</p>
+<p>至此，$L_{t-1}$只剩下噪声$\epsilon$未知，建模$\epsilon_{\theta}$，根据输入$x_t$和加噪步数$t$预测噪声$\epsilon$。</p>
+<p>推理：</p>
+<ol>
+<li>要采样$x_{t-1} \sim p_{\theta}(x_{t-1}|x_t)$，根据Eq(1)，就是要确定正态分布的均值$\mu_{\theta}(x_t,t)$和方差$\Sigma_{\theta}(x_t,t)$</li>
+<li>本节开头假设方差为某固定常数，只需要依Eq(11)计算均值就可以得到分布估计。</li>
+<li>求的分布后，随机采样就得到了去噪图像$x_{t-1}$</li>
+<li><code>t-=1</code>，回到step1</li>
+</ol>
+
+
+  </div>
+  <footer class="post-footer">
+<nav class="paginav">
+  <a class="prev" href="https://exiarepairii.github.io/blog/post/%E6%B5%85%E6%9E%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%E5%92%8C%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/">
+    <span class="title">« Prev Page</span>
+    <br>
+    <span>浅析主成分分析和因子分析</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    <footer class="footer">
+    <span>&copy; 2023 <a href="https://exiarepairii.github.io/blog/">渊海</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)">
+    <button class="top-link" id="top-link" type="button" accesskey="g">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z" />
+        </svg>
+    </button>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+    menu.onscroll = function () {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = 'copy';
+
+        function copyingDone() {
+            copybutton.innerText = 'copied!';
+            setTimeout(() => {
+                copybutton.innerText = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

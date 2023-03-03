@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>统计学 on 渊海</title>
-    <link>http://qiaosu.gitee.io/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6/</link>
+    <link>https://exiarepairii.github.io/blog/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6/</link>
     <description>Recent content in 统计学 on 渊海</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 06 Aug 2021 19:13:50 +0800</lastBuildDate><atom:link href="http://qiaosu.gitee.io/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Aug 2021 19:13:50 +0800</lastBuildDate><atom:link href="https://exiarepairii.github.io/blog/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>随机过程基本概念</title>
-      <link>http://qiaosu.gitee.io/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</link>
+      <link>https://exiarepairii.github.io/blog/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</link>
       <pubDate>Fri, 06 Aug 2021 19:13:50 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</guid>
+      <guid>https://exiarepairii.github.io/blog/post/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</guid>
       <description>随机过程基本概念 最近主要学习了随机过程，故对书中一些概念进行整理，并附上自己的理解。一方面方便日后查阅，另一方面有助于在整理过程中查漏补缺。
 测度空间 首先对$\sigma$代数的定义进行归纳。对于集合族F（集合组成的集合），其元素都是非空集合$\Omega$的子集，若
  $\Omega \in F$（任何集合都是自身的子集）； 集合$A \in F$，且补集$A^c \in F$； 对于可数个$A_n \in F$，其并集也属于F。  则$F$为$\Omega$上的一个$\sigma$代数，$(\Omega,F)$称为可测空间。
@@ -39,10 +39,10 @@ $$ \lim_{T \to \infty}\frac{1}{2N+1}\sum_{k=-N}^NX(k)=\mu $$
     
     <item>
       <title>浅析主成分分析和因子分析</title>
-      <link>http://qiaosu.gitee.io/post/%E6%B5%85%E6%9E%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%E5%92%8C%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</link>
+      <link>https://exiarepairii.github.io/blog/post/%E6%B5%85%E6%9E%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%E5%92%8C%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</link>
       <pubDate>Fri, 06 Aug 2021 14:31:25 +0800</pubDate>
       
-      <guid>http://qiaosu.gitee.io/post/%E6%B5%85%E6%9E%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%E5%92%8C%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</guid>
+      <guid>https://exiarepairii.github.io/blog/post/%E6%B5%85%E6%9E%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%E5%92%8C%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/</guid>
       <description>主成分分析意在降维，因子分析意在分析数据内在结构。二者目的不同，但采取了很多相同的步骤，因此如果只用结论就非常容易混淆。为了明确二者差异，首先给出步骤以及推导。
 步骤 假设有$m$条样本数据，每条样本有$n$维特征，得到样本矩阵
 $$ X^* = \left( \begin{matrix} x^*_{11} &amp;amp; x^*_{12} &amp;amp; \dots &amp;amp; x^*_{1n} \\
