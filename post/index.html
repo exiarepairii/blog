@@ -271,9 +271,31 @@ $$ x_1^Tx_1 = \sum_{i=1}^{m}x^2_{i1} = m\left(E(x_1^2) - E^2(x_1)\right)=mCov(x_
   <footer class="entry-footer">August 6, 2021</footer>
   <a class="entry-link" aria-label="post link to 浅析主成分分析和因子分析" href="http://qiaosu.gitee.io/post/%E6%B5%85%E6%9E%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%E5%92%8C%E5%9B%A0%E5%AD%90%E5%88%86%E6%9E%90/"></a>
 </article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2></h2>
+  </header>
+  <section class="entry-content">
+    <p>Denoising Diffusion Probabilistic Models https://arxiv.org/abs/2006.11239
+
+第一篇用diffusion model做图像生成的
+ Diffusion models are straightforward to define and efficient to train, but to the best of our knowledge, there has been no demonstration that they are capable of generating high quality samples.
+ 背景 逆向过程 由标准高斯噪声$x_T$转移到原始输入$x_0$的马尔可夫链。定义
+此处$p_{\theta}(x_{0:T})=p_{\theta}(x_0,x_1,\dots,x_T)$，对$x_{1:T}$积分可得原始输入$x_0$的边缘分布
+$$ p_{\theta}(x_0) = \int p_{\theta}(x_{0:T})dx_{1:T} $$
+每一步的转移概率服从高斯分布，其均值和方差由前一个状态计算得到。
+前向（扩散）过程 由原始输入$x_0$逐渐加噪声，得到各向独立的高斯噪声$x_T\sim N(x_T;0,I)$，也是一个马尔可夫过程
+转移概率由超参$\beta_t$和前一个状态$x_{t-1}$共同决定。看起来$\beta_t \in [0,1]$，而且方差越大均值约小，这个有什么深意？
+前向过程中任意时刻的条件概率都可以写作
+$$ q(x_t|x_0) = N(x_t;\sqrt{\overline{\alpha}_t}x_0,(1-\overline{\alpha}_t)I); \quad \text{where} \quad\alpha_t := 1-\beta_t ,\quad \overline{\alpha}t := \prod{s=1}^t \alpha_s $$...</p>
+  </section>
+  <footer class="entry-footer"></footer>
+  <a class="entry-link" aria-label="post link to " href="http://qiaosu.gitee.io/post/denoising-diffusion-model%E7%AC%94%E8%AE%B0/denoising-diffusion-probabilistic-models-085f7cc829844e268a9fee93419a5210/"></a>
+</article>
     </main>
     <footer class="footer">
-    <span>&copy; 2021 <a href="http://qiaosu.gitee.io/">渊海</a></span>
+    <span>&copy; 2023 <a href="http://qiaosu.gitee.io/">渊海</a></span>
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
