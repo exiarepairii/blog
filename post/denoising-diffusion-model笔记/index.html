@@ -316,7 +316,7 @@ $$</p>
 $$</p>
 <p>又</p>
 <p>$$
-\begin{aligned} q(x_t|x_{t-1}) &amp;= q(x_t|x_{t-1},x_0) \&amp;=\frac{q(x_{t-1}|x_t,x_0)q(x_t,x_0)}{q(x_{t-1},x_0)} \ &amp;= q(x_{t-1}|x_t,x_0) \frac{q(x_t|x_0)}{q(x_{t-1}|x_0)}\end{aligned}
+\begin{aligned} q(x_t|x_{t-1}) &amp;= q(x_t|x_{t-1},x_0) \&amp;=\frac{q(x_{t-1}|x_t,x_0)q(x_t,x_0)}{q(x_{t-1},x_0)} \ &amp;= q(x_{t-1}|x_t,x_0) \frac{q(x_t|x_0)}{q(x_{t-1}|x_0)}\end{aligned} 
 $$</p>
 <p>因此</p>
 <p>$$
@@ -324,7 +324,7 @@ $$</p>
 $$</p>
 <p>其中</p>
 <p>$$
-\begin{aligned} \sum_{t&gt; 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)}\cdot \frac{q(x_{t-1}|x_0)}{q(x_{t}|x_0)} &amp;= \sum_{t&gt; 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)} + \sum_{t&gt; 1} \log \frac{q(x_{t-1}|x_0)}{q(x_{t}|x_0)} \&amp;= \sum_{t&gt; 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)} + \log \frac{q(x_{1}|x_0)}{q(x_{T}|x_0)}\end{aligned}
+\begin{aligned} \sum_{t&gt; 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)}\cdot \frac{q(x_{t-1}|x_0)}{q(x_{t}|x_0)} &amp;= \sum_{t&gt; 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)} + \sum_{t&gt; 1} \log \frac{q(x_{t-1}|x_0)}{q(x_{t}|x_0)} \&amp;= \sum_{t&gt; 1} \log \frac{p_{\theta}(x_{t-1}|x_t)}{q(x_t|x_{t-1},x_0)} + \log \frac{q(x_{1}|x_0)}{q(x_{T}|x_0)}\end{aligned} 
 $$</p>
 <p>得到</p>
 <p>$$
