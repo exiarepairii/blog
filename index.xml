@@ -22,7 +22,7 @@
 $$ p_{\theta}(x_0) = \int p_{\theta}(x_{0:T})dx_{1:T} $$
 每一步的转移概率服从高斯分布，其均值和方差由前一个状态计算得到。
 前向（扩散）过程 由原始输入$x_0$逐渐加噪声，得到各向独立的高斯噪声$x_T\sim N(x_T;0,I)$，也是一个马尔可夫过程
-转移概率由超参$\beta_t$和前一个状态$x_{t-1}$共同决定。看起来$\beta_t \in [0,1]$，而且方差越大均值约小，这个有什么深意？
+转移概率由超参$\beta_t$和前一个状态$x_{t-1}$共同决定。看起来$\beta_t \in [0,1]$，而且方差越大均值越小，这个有什么深意？
 前向过程中任意时刻的条件概率都可以写作
 $$ q(x_t|x_0) = N(x_t;\sqrt{\overline{\alpha}_t}x_0,(1-\overline{\alpha}_t)I); \quad \text{where} \quad\alpha_t := 1-\beta_t ,\quad \overline{\alpha}t := \prod{s=1}^t \alpha_s $$</description>
     </item>
